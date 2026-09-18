@@ -4,7 +4,7 @@
 	"version": "0.2.1",
 	"description": "Agent-agnostic coding handoff: asks for licenses and routing prefs on setup; routes Cloud Agents / Claude / Codex / Cursor CLI / AGY / Kiro / worktrees as peers \u2014 without replacing a builder seat.",
 	"author": {
-		"name": "tinkabot"
+		"name": "arditti-x"
 	},
 	"license": "MIT",
 	"keywords": [
