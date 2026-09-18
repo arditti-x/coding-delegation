@@ -4,7 +4,7 @@
   "description": "Agent-agnostic coding handoff: asks for licenses and routing prefs on setup; routes Cloud Agents / Claude / Codex / Cursor CLI / AGY / Kiro / worktrees as peers \u2014 without replacing a builder seat.",
   "skills": "./skills/",
   "logo": "assets/logo.png",
-  "repository": "https://github.com/arditti/coding-delegation",
+  "repository": "https://github.com/arditti-x/coding-delegation",
   "author": {
     "name": "arditti-x"
   }
