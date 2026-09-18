@@ -1,16 +1,16 @@
 ---
 name: build-handoff-brief
 description: >-
-  Use when preparing a file-based build brief for a standing builder seat, Cursor
-  Cloud Agent, or Herdr-style TTY session. Defines required fields, a markdown
-  template, and what must never be included.
+  Use when preparing a file-based build brief for a standing builder seat or any
+  coding surface selected via coding-delegation prefs. Defines required fields,
+  a markdown template, and what must never be included.
 ---
 
 # Build handoff brief
 
 Write the brief as a **file** (durable path in the repo or shared workspace). Do
 not rely on chat paste alone. Domain/orchestrator bots write the brief; the
-builder or Cloud Agent executes it.
+builder or the prefs-selected coding surface executes it.
 
 ## Required fields
 
@@ -58,8 +58,10 @@ builder or Cloud Agent executes it.
 - On PR ready:
 
 ## Notes for executor
-- Prefer Cursor Cloud Agent; else Herdr-style TTY; else git worktree (never main checkout).
+- Route per coding-delegation prefs (licensed surfaces as peers; no built-in default ranking).
+- Never edit the main checkout; use a worktree or cloud session branch.
 - Push durable fix/… before cloud teleport if local work exists.
+- Require a TTY for cloud CLIs when prefs say so.
 - Monitor pings only on idle / blocker / PR — no ack-only chatter.
 ```
 
@@ -70,9 +72,10 @@ builder or Cloud Agent executes it.
 - Open-ended “improve everything” goals without success criteria.
 - Instructions that replace the builder seat with the domain bot for merges.
 - Product/MCP day-to-day tasks that belong to the domain bot, not the code seat.
+- A hard-coded “always use Cloud Agents first” (or any other forced ranking). Routing belongs in coding-delegation prefs.
 
 ## After writing
 
-1. Save the file; pass its path into the launch command or Cloud Agent prompt.
+1. Save the file; pass its path into the launch command or chosen surface prompt.
 2. Run `coding-preflight`.
-3. Launch via `delegate-coding`.
+3. Launch via `delegate-coding` (which uses user prefs only).

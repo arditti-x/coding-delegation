@@ -1,15 +1,18 @@
 ---
 name: coding-preflight
 description: >-
-  Use before launching a Cloud Agent, Herdr-style TTY cloud CLI, or local git
-  worktree. Verifies remotes, auth, and branch pushability so sessions never
+  Use before launching any coding surface from coding-delegation prefs (Cloud
+  Agents, Claude/Codex/CLI cloud CLIs, other TTY cloud CLIs, or local git
+  worktrees). Verifies remotes, auth, and branch pushability so sessions never
   start unable to push or open a PR.
 ---
 
 # Coding preflight
 
 Run this checklist **before** any coding session launch. Prefer aborting early
-over starting a session that cannot push or open a PR.
+over starting a session that cannot push or open a PR. Prefer the surface
+already chosen via `delegate-coding` and user prefs; this skill does not rank
+surfaces.
 
 ## Checklist
 
@@ -22,7 +25,7 @@ over starting a session that cannot push or open a PR.
 ### Auth
 
 - [ ] Git credentials or credential helper can authenticate to the remote.
-- [ ] Host CLI / Cloud Agent identity can create branches and open PRs.
+- [ ] Host CLI / cloud coding identity for the **chosen** surface can create branches and open PRs.
 - [ ] Required org SSO / 2FA / fine-grained token scopes are already satisfied.
 - [ ] No secrets will be pasted into the agent chat or brief file.
 
@@ -35,10 +38,12 @@ over starting a session that cannot push or open a PR.
 
 ### Surface-specific
 
+Run only the row that matches the prefs-selected surface:
+
 | Surface | Extra checks |
 |---------|----------------|
-| Cloud Agent | Repo is linked; agent can clone and open PR; brief file path is reachable or content will be inlined once. |
-| Herdr-style TTY | Session is **TTY**; cloud-first CLI; non-TTY bare cloud CLIs are disallowed. |
+| Cursor Cloud Agents | Repo is linked; agent can clone and open PR; brief file path is reachable or content will be inlined once. |
+| Claude Code cloud / Codex cloud / Cursor CLI / other TTY cloud CLIs | Session is **TTY** when prefs require it; cloud-first CLI; non-TTY bare cloud CLIs are disallowed. |
 | Git worktree | Path is outside the main working tree; branch is checked out only in that worktree. |
 
 ## Abort conditions
@@ -49,9 +54,11 @@ Stop launch (do not start the session) if any of the following hold:
 2. Auth expired, insufficient scopes, or SSO not completed.
 3. Cannot create or push the planned branch.
 4. Only path available is editing the main checkout in place.
-5. Only available cloud path is a non-TTY bare CLI.
+5. Only available cloud path is a non-TTY bare CLI while prefs require a TTY.
 6. Brief lacks merge policy or success criteria (complete via `build-handoff-brief` first).
+7. Prefs missing or `setup_complete` false (run `setup-coding-delegation` first).
 
 ## After a clean preflight
 
-Proceed to launch per `delegate-coding`, using the brief from `build-handoff-brief`.
+Proceed to launch per `delegate-coding`, using the brief from `build-handoff-brief`
+and the surface chosen from coding-delegation prefs.
