@@ -3,9 +3,9 @@ name: delegate-coding
 description: >-
   Use when an orchestrator or domain bot needs to launch or route repo/PR coding
   work. Routes among licensed surfaces using user prefs only (Cloud Agents,
-  Claude/Codex/CLI cloud CLIs, worktrees as peers). Enforces seat split and
-  token rules. Does not replace a builder agent seat. Runs setup first when
-  prefs are missing.
+  Claude, Codex, Cursor CLI, AGY, Kiro, other TTY cloud CLIs, worktrees as
+  peers). Enforces seat split and token rules. Does not replace a builder agent
+  seat. Runs setup first when prefs are missing.
 ---
 
 # Delegate coding
@@ -27,9 +27,9 @@ Before routing:
 
 ## Surfaces (peers)
 
-Treat every licensed surface as a peer. There is **no** built-in preference for
-Cursor Cloud Agents, Claude Code cloud, Codex cloud, Cursor CLI, other TTY
-cloud CLIs, or local worktrees. Ranking comes only from
+Treat every licensed surface as a peer. There is **no** built-in preference among
+Cursor Cloud Agents, Claude Code cloud, Codex cloud, Cursor CLI, Antigravity
+AGY, Kiro, other TTY cloud CLIs, or local worktrees. Ranking comes only from
 `preferences.order` and the free-text `preferences.when` notes the user set.
 
 Known surface keys (from setup):
@@ -40,6 +40,8 @@ Known surface keys (from setup):
 | `claude_code_cloud` | Claude Code cloud |
 | `codex_cloud` | Codex cloud |
 | `cursor_cli` | Cursor CLI |
+| `agy_cloud` | Antigravity `agy` (Google AI Pro) on a TTY |
+| `kiro_cloud` | Kiro cloud on a TTY |
 | `other_tty_cloud_clis` | User-named TTY cloud CLIs |
 | `local_worktrees` | Isolated local git worktrees |
 

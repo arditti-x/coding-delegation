@@ -38,12 +38,10 @@ surfaces.
 
 ### Surface-specific
 
-Run only the row that matches the prefs-selected surface:
-
 | Surface | Extra checks |
 |---------|----------------|
-| Cursor Cloud Agents | Repo is linked; agent can clone and open PR; brief file path is reachable or content will be inlined once. |
-| Claude Code cloud / Codex cloud / Cursor CLI / other TTY cloud CLIs | Session is **TTY** when prefs require it; cloud-first CLI; non-TTY bare cloud CLIs are disallowed. |
+| Cursor Cloud Agents | Repo is linked; agent can clone and open PR; brief path reachable or content inlined once. |
+| Claude / Codex / Cursor CLI / AGY / Kiro / other TTY cloud CLIs | Session is a real **TTY**; cloud-first flags as required by that CLI; bare non-TTY cloud CLIs are disallowed. |
 | Git worktree | Path is outside the main working tree; branch is checked out only in that worktree. |
 
 ## Abort conditions

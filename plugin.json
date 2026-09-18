@@ -1,7 +1,7 @@
 {
   "name": "coding-delegation",
-  "version": "0.2.0",
-  "description": "Agent-agnostic coding handoff: asks for licenses and routing prefs on setup; routes Cloud Agents / Claude / Codex / CLI / worktrees as peers \u2014 without replacing a builder seat.",
+  "version": "0.2.1",
+  "description": "Agent-agnostic coding handoff: asks for licenses and routing prefs on setup; routes Cloud Agents / Claude / Codex / Cursor CLI / AGY / Kiro / worktrees as peers \u2014 without replacing a builder seat.",
   "skills": "./skills/",
   "logo": "assets/logo.png",
   "repository": "https://github.com/arditti/coding-delegation"
