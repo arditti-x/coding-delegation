@@ -1,0 +1,25 @@
+{
+  "name": "coding-delegation",
+  "displayName": "Coding Delegation",
+  "version": "0.1.0",
+  "description": "Teach agents how to hand coding work to Cloud Agents / TTY cloud CLIs / git worktrees — without replacing a builder seat.",
+  "author": {
+    "name": "tinkabot"
+  },
+  "license": "MIT",
+  "keywords": [
+    "delegation",
+    "cloud-agents",
+    "herdr",
+    "worktrees",
+    "orchestration",
+    "builder"
+  ],
+  "category": "developer-tools",
+  "tags": [
+    "workflow",
+    "delegation",
+    "coding-agents"
+  ],
+  "skills": "./skills/"
+}

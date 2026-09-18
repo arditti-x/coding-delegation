@@ -1,0 +1,6 @@
+{
+  "name": "coding-delegation",
+  "version": "0.1.0",
+  "description": "Teach agents how to hand coding work to Cloud Agents / TTY cloud CLIs / git worktrees — without replacing a builder seat.",
+  "skills": "./skills/"
+}
