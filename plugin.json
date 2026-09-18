@@ -1,6 +1,8 @@
 {
   "name": "coding-delegation",
   "version": "0.1.0",
-  "description": "Teach agents how to hand coding work to Cloud Agents / TTY cloud CLIs / git worktrees — without replacing a builder seat.",
-  "skills": "./skills/"
+  "description": "Teach agents how to hand coding work to Cloud Agents / TTY cloud CLIs / git worktrees \u2014 without replacing a builder seat.",
+  "skills": "./skills/",
+  "logo": "assets/logo.png",
+  "repository": "https://github.com/arditti/coding-delegation"
 }
