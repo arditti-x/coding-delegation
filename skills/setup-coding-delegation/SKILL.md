@@ -33,11 +33,12 @@ licenses:
   cursor_cli: false
   agy_cloud: false          # Antigravity `agy` (Google AI Pro) via TTY
   kiro_cloud: false         # Kiro cloud via TTY
+  grok_build: false         # Grok Build / xAI CLI via TTY
   other_tty_cloud_clis: []  # freeform names the user names
   local_worktrees: true     # usually available unless the user disables it
 preferences:
   # Ordered preference is USER-DEFINED only — empty until setup finishes
-  order: []  # e.g. [codex_cloud, agy_cloud, kiro_cloud, local_worktrees]
+  order: []  # e.g. [codex_cloud, agy_cloud, kiro_cloud, grok_build, local_worktrees]
   when:
     cursor_cloud_agents: ""
     claude_code_cloud: ""
@@ -45,6 +46,7 @@ preferences:
     cursor_cli: ""
     agy_cloud: ""
     kiro_cloud: ""
+    grok_build: ""
     # one free-text entry per licensed surface
   defaults:
     never_main_checkout: true
@@ -73,6 +75,7 @@ Present these as peers (no implied winner). Allow multi-select:
 - Cursor CLI (`cursor_cli`)
 - Antigravity / AGY cloud (`agy_cloud`) — Google AI Pro via `agy` on a TTY
 - Kiro cloud (`kiro_cloud`) — Kiro on a TTY
+- Grok Build (`grok_build`) — Grok Build / xAI CLI on a TTY; install hint: `curl -fsSL https://x.ai/cli/install.sh | bash`
 - Other TTY cloud CLIs (`other_tty_cloud_clis`) — if chosen, ask for freeform names
 - Local git worktrees (`local_worktrees`) — default available unless the user turns it off
 

@@ -2,7 +2,7 @@
 
 Marketplace-ready Cursor plugin that teaches **any** orchestrator or domain bot
 how to hand coding work to licensed coding surfaces — Cursor Cloud Agents,
-Claude Code cloud, Codex cloud, Cursor CLI, other TTY cloud CLIs, or git
+Claude Code cloud, Codex cloud, Cursor CLI, Grok Build, other TTY cloud CLIs, or git
 worktrees — **without replacing a builder agent seat**.
 
 Surfaces are **agent-agnostic peers**. On first use (or when prefs are missing),
@@ -43,6 +43,9 @@ licenses:
   claude_code_cloud: false
   codex_cloud: false
   cursor_cli: false
+  agy_cloud: false
+  kiro_cloud: false
+  grok_build: false
   other_tty_cloud_clis: []
   local_worktrees: true
 preferences:
@@ -54,6 +57,16 @@ preferences:
     preflight_before_launch: true
 setup_complete: false
 ```
+
+## Grok Build peer
+
+Grok Build is a TTY cloud CLI peer selected only through user prefs. If it is not installed, the documented install hint is:
+
+```bash
+curl -fsSL https://x.ai/cli/install.sh | bash
+```
+
+Do not infer a binary name or flags from this hint; use the Grok Build / xAI CLI documentation.
 
 ## Install (Cursor IDE)
 
@@ -96,7 +109,7 @@ Dashboard → Marketplace → Coding Delegation → Enable
 3. Before launch, run **coding-preflight** (abort if remotes/auth fail).
 4. Write the brief with **build-handoff-brief**; pass the file path to the
    builder or chosen surface.
-5. Route per prefs only — never the main checkout; TTY for cloud CLIs when
+5. Route per prefs only — never the main checkout; TTY for cloud CLIs, including Grok Build, when
    required.
 6. Monitor only on idle, blocker, or PR ready. Builder merges when CI is green.
 

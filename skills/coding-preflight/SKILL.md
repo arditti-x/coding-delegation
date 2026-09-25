@@ -41,7 +41,7 @@ surfaces.
 | Surface | Extra checks |
 |---------|----------------|
 | Cursor Cloud Agents | Repo is linked; agent can clone and open PR; brief path reachable or content inlined once. |
-| Claude / Codex / Cursor CLI / AGY / Kiro / other TTY cloud CLIs | Session is a real **TTY**; cloud-first flags as required by that CLI; bare non-TTY cloud CLIs are disallowed. |
+| Claude / Codex / Cursor CLI / AGY / Kiro / Grok Build / other TTY cloud CLIs | Session is a real **TTY**; use cloud-first options as documented by that CLI; bare non-TTY cloud CLIs are disallowed. |
 | Git worktree | Path is outside the main working tree; branch is checked out only in that worktree. |
 
 ## Abort conditions

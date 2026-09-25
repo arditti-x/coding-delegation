@@ -3,7 +3,7 @@ name: delegate-coding
 description: >-
   Use when an orchestrator or domain bot needs to launch or route repo/PR coding
   work. Routes among licensed surfaces using user prefs only (Cloud Agents,
-  Claude, Codex, Cursor CLI, AGY, Kiro, other TTY cloud CLIs, worktrees as
+  Claude, Codex, Cursor CLI, AGY, Kiro, Grok Build, other TTY cloud CLIs, worktrees as
   peers). Enforces seat split and token rules. Does not replace a builder agent
   seat. Runs setup first when prefs are missing.
 ---
@@ -29,7 +29,7 @@ Before routing:
 
 Treat every licensed surface as a peer. There is **no** built-in preference among
 Cursor Cloud Agents, Claude Code cloud, Codex cloud, Cursor CLI, Antigravity
-AGY, Kiro, other TTY cloud CLIs, or local worktrees. Ranking comes only from
+AGY, Kiro, Grok Build, other TTY cloud CLIs, or local worktrees. Ranking comes only from
 `preferences.order` and the free-text `preferences.when` notes the user set.
 
 Known surface keys (from setup):
@@ -42,8 +42,13 @@ Known surface keys (from setup):
 | `cursor_cli` | Cursor CLI |
 | `agy_cloud` | Antigravity `agy` (Google AI Pro) on a TTY |
 | `kiro_cloud` | Kiro cloud on a TTY |
+| `grok_build` | Grok Build / xAI CLI on a TTY |
 | `other_tty_cloud_clis` | User-named TTY cloud CLIs |
 | `local_worktrees` | Isolated local git worktrees |
+
+`grok_build` follows the same TTY cloud path as AGY and Kiro: run the
+**coding-preflight** checks, launch only in a real TTY, and use the documented
+Grok Build / xAI CLI command and options. Do not infer a binary name or flags.
 
 ## Routing rules
 
