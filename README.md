@@ -10,8 +10,9 @@ the plugin asks which licenses exist and when to prefer each surface. There is
 no built-in ranking.
 
 Install and login for each peer, Herdr, and any other coding CLI are in
-[docs/cli-setup.md](./docs/cli-setup.md). Follow that file. Do not invent
-installer or login commands.
+[docs/cli-setup.md](./docs/cli-setup.md). Documented vendor commands and skills
+are in [docs/vendor-tools.md](./docs/vendor-tools.md). Follow those files. Do not
+invent installer, login, or agent commands.
 
 ## What this is
 
@@ -125,6 +126,7 @@ Dashboard → Marketplace → Coding Delegation → Enable
 | `coding-preflight` | Checklist before any prefs-selected surface launch |
 | `build-handoff-brief` | Required brief fields + template for handoff |
 | `agent-comms` | Message a builder or another agent about a build, question, or reply |
+| `vendor-tools` | Use documented vendor commands and skills before launch |
 
 ## Layout
 
@@ -144,7 +146,8 @@ coding-delegation/
     ├── delegate-coding/SKILL.md
     ├── coding-preflight/SKILL.md
     ├── build-handoff-brief/SKILL.md
-    └── agent-comms/SKILL.md
+    ├── agent-comms/SKILL.md
+    └── vendor-tools/SKILL.md
 ```
 
 ## License
