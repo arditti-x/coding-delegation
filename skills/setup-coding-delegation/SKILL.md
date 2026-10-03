@@ -13,6 +13,8 @@ Run this skill before any coding handoff when preferences are missing or the
 user asks to reconfigure. Persist the result so later routing uses **only**
 what the user declared. Do not invent licenses the user did not confirm.
 
+For install and login, point the user at `docs/cli-setup.md` for the matching surface (or the generic section). Do not invent installer commands, binary names, or login steps.
+
 ## Prefs file
 
 Agents should load and write preferences from one of these paths (first that

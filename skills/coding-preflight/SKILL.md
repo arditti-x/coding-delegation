@@ -9,7 +9,7 @@ description: >-
 
 # Coding preflight
 
-Run this checklist **before** any coding session launch. Prefer aborting early
+Run this checklist **before** any coding session launch. If the chosen surface is not installed or not logged in, follow `docs/cli-setup.md` for that surface instead of inventing install or login commands. Prefer aborting early
 over starting a session that cannot push or open a PR. Prefer the surface
 already chosen via `delegate-coding` and user prefs; this skill does not rank
 surfaces.

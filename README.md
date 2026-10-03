@@ -9,6 +9,10 @@ Surfaces are **agent-agnostic peers**. On first use (or when prefs are missing),
 the plugin asks which licenses exist and when to prefer each surface. There is
 no built-in ranking.
 
+Install and login for each peer, Herdr, and any other coding CLI are in
+[docs/cli-setup.md](./docs/cli-setup.md). Follow that file. Do not invent
+installer or login commands.
+
 ## What this is
 
 Portable skills for:
@@ -60,13 +64,10 @@ setup_complete: false
 
 ## Grok Build peer
 
-Grok Build is a TTY cloud CLI peer selected only through user prefs. If it is not installed, the documented install hint is:
-
-```bash
-curl -fsSL https://x.ai/cli/install.sh | bash
-```
-
-Do not infer a binary name or flags from this hint; use the Grok Build / xAI CLI documentation.
+Grok Build is a TTY cloud CLI peer selected only through user prefs. Install
+and login (binary `grok`, checked against the xAI docs) are in
+[docs/cli-setup.md](./docs/cli-setup.md#grok-build-xai-cli). Do not infer extra
+flags beyond what that page copies from the vendor docs.
 
 ## Install (Cursor IDE)
 
@@ -129,6 +130,8 @@ coding-delegation/
 ├── .cursor-plugin/plugin.json
 ├── plugin.json
 ├── README.md
+├── docs/
+│   └── cli-setup.md
 ├── LICENSE
 ├── PROOF.md
 ├── assets/
