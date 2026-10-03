@@ -127,6 +127,8 @@ irm 'https://cursor.com/install?win32=true' | iex
 
 Verify: `agent --version`. The install docs say to put `~/.local/bin` on `PATH` if the shell cannot find `agent`. Update: `agent update` (auto-update is the default).
 
+**Warning (checked 2026-10-03 on Linux):** The xAI/Grok installer may take over `~/.local/bin/agent`; Cursor CLI's binary is also named `agent`. If both are needed, install Grok first, then re-run the Cursor CLI installer so `agent` is Cursor again. Invoke Grok as `grok`, not `agent`. This warning was checked by actually running both installers.
+
 **Login:**
 
 - Browser (recommended): `agent login`. Check: `agent status` (`whoami` is the same command). Sign out: `agent logout`.
@@ -221,6 +223,8 @@ irm https://x.ai/cli/install.ps1 | iex
 ```
 
 Start: `cd your-project` then `grok`. Version: `grok version`. Update: `grok update`.
+
+**Warning (checked 2026-10-03 on Linux):** The xAI/Grok installer may take over `~/.local/bin/agent`; Cursor CLI's binary is also named `agent`. If both are needed, install Grok first, then re-run the Cursor CLI installer so `agent` is Cursor again. Invoke Grok as `grok`, not `agent`. This warning was checked by actually running both installers.
 
 **Login:**
 
