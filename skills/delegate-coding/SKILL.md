@@ -97,8 +97,11 @@ Grok Build / xAI CLI command and options. Do not infer a binary name or flags.
 6. Monitor only for idle, blocker, or PR; notify per the brief’s merge policy.
 7. Builder merges when CI is green; domain bot stays on product/MCP.
 
+Before launch, read the matching vendor section in `docs/vendor-tools.md` and prefer documented skills/commands over ad-hoc prompts.
+
 ## Sibling skills
 
 - `setup-coding-delegation` — licenses, order, and when-to-use prefs.
 - `coding-preflight` — checklist before launch.
 - `build-handoff-brief` — required brief fields and template.
+- `agent-comms` — message a builder or another agent about a build, question, or reply.

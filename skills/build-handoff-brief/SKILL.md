@@ -76,6 +76,6 @@ builder or the prefs-selected coding surface executes it.
 
 ## After writing
 
-1. Save the file; pass its path into the launch command or chosen surface prompt.
+1. Save the file; saving the file does not notify anyone; send a message with the path and the one-line ask. Then pass its path into the launch command or chosen surface prompt.
 2. Run `coding-preflight`.
 3. Launch via `delegate-coding` (which uses user prefs only).

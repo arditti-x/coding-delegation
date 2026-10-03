@@ -110,9 +110,11 @@ Dashboard → Marketplace → Coding Delegation → Enable
 3. Before launch, run **coding-preflight** (abort if remotes/auth fail).
 4. Write the brief with **build-handoff-brief**; pass the file path to the
    builder or chosen surface.
-5. Route per prefs only — never the main checkout; TTY for cloud CLIs, including Grok Build, when
+5. For builder questions and replies, use **agent-comms**; message with the brief
+   path and one-line ask because saving the file alone does not wake the builder.
+6. Route per prefs only — never the main checkout; TTY for cloud CLIs, including Grok Build, when
    required.
-6. Monitor only on idle, blocker, or PR ready. Builder merges when CI is green.
+7. Monitor only on idle, blocker, or PR ready. Builder merges when CI is green.
 
 ## Skills
 
@@ -122,6 +124,7 @@ Dashboard → Marketplace → Coding Delegation → Enable
 | `delegate-coding` | Launch or route coding from an orchestrator / domain bot |
 | `coding-preflight` | Checklist before any prefs-selected surface launch |
 | `build-handoff-brief` | Required brief fields + template for handoff |
+| `agent-comms` | Message a builder or another agent about a build, question, or reply |
 
 ## Layout
 
@@ -140,7 +143,8 @@ coding-delegation/
     ├── setup-coding-delegation/SKILL.md
     ├── delegate-coding/SKILL.md
     ├── coding-preflight/SKILL.md
-    └── build-handoff-brief/SKILL.md
+    ├── build-handoff-brief/SKILL.md
+    └── agent-comms/SKILL.md
 ```
 
 ## License
