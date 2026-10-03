@@ -2,7 +2,8 @@
 name: agent-comms
 description: >-
   Use this when messaging a builder or another agent about a build, a question, or
-  a reply, including how to get a response back and how to answer their questions.
+  a reply, including how to get a response back, how to answer their questions,
+  and how to answer a question from a running coding-agent session.
 ---
 
 # Agent communication
@@ -34,3 +35,17 @@ Never send ack-only pings ("got it", "thanks", "on it"); wait in the same turn
 for their reply; re-send the same ask while one is in flight; assume they re-read
 a file you edited unless you message them; wake them for an FYI; or fan the same
 job out to several agents.
+
+## Questions from the coding agent
+
+This is the session you launched (Claude Code, Codex, Cursor CLI, a Cursor Cloud
+Agent, AGY, Kiro, Grok Build, or a Herdr pane). It is not the builder seat in
+sections 1–4.
+
+- Answer in the same session that asked. Do not start a second agent for the same question.
+- Do not ack-only. Put the decision in the answer.
+- If you cannot answer, say what is blocking and who must decide.
+
+How that session asks, how to answer, and whether it blocks are in the Questions
+note for that vendor in [docs/vendor-tools.md](../../docs/vendor-tools.md). If
+the note says unknown, do not invent a command or a key. Checked 2026-10-03.
