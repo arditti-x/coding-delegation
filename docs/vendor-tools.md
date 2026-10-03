@@ -34,6 +34,10 @@ building, debugging, and reviewing code.
 - **Updated official list:** [Cursor CLI overview](https://docs.cursor.com/cli/overview)
 - **Checked:** 2026-10-03
 
+### Observed 2026-10-03 (live sessions, Linux)
+
+- `agent status` already logged in. `agent --trust "<prompt>"` in a worktree started with no new login. It asked a filename question. The answer `alpha.txt` was typed in that same session. It wrote `alpha.txt`.
+
 ### Questions
 
 - **How it asks:** Before a terminal command, the CLI asks you to approve or reject it. Plan mode asks clarifying questions; the page does not say how those are shown.
@@ -56,6 +60,10 @@ bundled skills.
 
 - **Updated official list:** [Claude Code commands](https://code.claude.com/docs/en/commands)
 - **Checked:** 2026-10-03
+
+### Observed 2026-10-03 (live sessions, Linux)
+
+- In an earlier install pass, not this Q&A round, `claude auth status` was logged out. Needs `claude` or `claude auth login` in a real terminal. Do not put an API key in chat.
 
 ### Questions
 
@@ -81,6 +89,10 @@ app.
 - **Updated official list:** [Codex CLI slash commands](https://developers.openai.com/codex/cli/slash-commands)
 - **Checked:** 2026-10-03
 
+### Observed 2026-10-03 (live sessions, Linux)
+
+- `codex login status` said logged in using ChatGPT. `codex "<prompt>"` still blocked on “Trust this folder?” for the worktree root before any model question. That prompt needs a keypress in the same terminal. It could not be answered from a non-interactive driver. Session killed. No file written.
+
 ### Questions
 
 - **How it asks:** With an interactive approval policy, Codex stops and asks before an action that policy requires, such as leaving the sandbox, using the network, a side-effecting app or MCP tool, or a `request_permissions` prompt.
@@ -105,6 +117,10 @@ Skills become slash commands in the interactive CLI; a skill named
 
 - **Updated official list:** [Antigravity CLI reference](https://antigravity.google/docs/cli/reference/)
 - **Checked:** 2026-10-03
+
+### Observed 2026-10-03 (live sessions, Linux)
+
+- Not opened this round. `agy` starts a browser login if the OS keyring has no token.
 
 ### Questions
 
@@ -132,6 +148,10 @@ Skills.
 - **Updated official list:** [Kiro slash commands](https://kiro.dev/docs/reference/slash-commands/)
 - **Checked:** 2026-10-03
 
+### Observed 2026-10-03 (live sessions, Linux)
+
+- `kiro-cli whoami` was logged in. `kiro-cli chat "<prompt>"` accepted the task and the answer `alpha.txt`, then blocked on “write requires approval” with choices Yes (single permission), Trust (always allow in this session), No. That is a permission prompt, not login. File was not written.
+
 ### Questions
 
 - **How it asks:** A tool that needs permission shows a notification bar with Yes, Trust, and No. The busy timer also pauses for an answer to a question. The CLI page does not name a separate question command.
@@ -157,6 +177,10 @@ user-invocable skills.
 
 - **Updated official list:** [Grok Build modes and commands](https://docs.x.ai/build/modes-and-commands)
 - **Checked:** 2026-10-03
+
+### Observed 2026-10-03 (live sessions, Linux)
+
+- A previous installer had used `~/.grok/auth.json`, but a new interactive `grok "<prompt>"` ignored that and demanded browser device auth. The session was killed while still “Waiting for approval” (about 308s). After that, `~/.grok/auth.json` was missing. Approving after the process died did not attach.
 
 ### Questions
 
@@ -185,6 +209,10 @@ agent skill teaches an agent to control Herdr from inside a Herdr-managed pane.
 - **Agent skill:** [Herdr agent skill](https://herdr.dev/docs/agent-skill/)
 - **Checked:** 2026-10-03
 
+### Observed 2026-10-03 (live sessions, Linux)
+
+- No login command. `herdr` exits “cannot attach without a usable terminal: Not a tty”.
+
 ### Questions
 
 - **How it asks:** Herdr sets the agent to `blocked` when it recognizes an approval or question UI in the pane.
@@ -192,6 +220,10 @@ agent skill teaches an agent to control Herdr from inside a Herdr-managed pane.
 - **Blocks:** Yes. The agent stays `blocked` until that dialog is handled. `herdr agent wait --until blocked` waits for that state.
 - **Docs:** [Agent automation](https://herdr.dev/docs/agent-automation/)
 - **Checked:** 2026-10-03
+
+## Observed cross-vendor quirk — 2026-10-03 (live sessions, Linux)
+
+- `whoami` or login-status passing does not mean the next session starts. Codex adds a folder-trust prompt, Kiro adds a write-approval prompt, Grok can demand a fresh device login even when an auth file existed, and a device approval only counts if that process is still waiting.
 
 ## Another coding CLI or agent
 
