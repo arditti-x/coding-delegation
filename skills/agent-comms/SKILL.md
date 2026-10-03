@@ -38,27 +38,4 @@ job out to several agents.
 
 ## Questions from the coding agent
 
-This is the session you launched (Claude Code, Codex, Cursor CLI, a Cursor Cloud
-Agent, AGY, Kiro, Grok Build, or a Herdr pane). It is not the builder seat in
-sections 1–4.
-
-- Answer in the same session that asked. Do not start a second agent for the same question.
-- Do not ack-only. Put the decision in the answer.
-- If you cannot answer, say what is blocking and who must decide.
-
-How that session asks, how to answer, and whether it blocks are in the Questions
-note for that vendor in [docs/vendor-tools.md](../../docs/vendor-tools.md). If
-the note says unknown, do not invent a command or a key. Checked 2026-10-03.
-
-## Observed 2026-10-03 (live sessions, Linux)
-
-These are observed session results, not a guessed protocol:
-
-- **Cursor CLI:** `agent status` already logged in. `agent --trust "<prompt>"` in a worktree started with no new login. It asked a filename question. The answer `alpha.txt` was typed in that same session. It wrote `alpha.txt`.
-- **Codex:** `codex login status` said logged in using ChatGPT. `codex "<prompt>"` still blocked on “Trust this folder?” for the worktree root before any model question. That prompt needs a keypress in the same terminal. It could not be answered from a non-interactive driver. Session killed. No file written.
-- **Kiro:** `kiro-cli whoami` was logged in. `kiro-cli chat "<prompt>"` accepted the task and the answer `alpha.txt`, then blocked on “write requires approval” with choices Yes (single permission), Trust (always allow in this session), No. That is a permission prompt, not login. File was not written.
-- **Grok:** A previous installer had used `~/.grok/auth.json`, but a new interactive `grok "<prompt>"` ignored that and demanded browser device auth. The session was killed while still “Waiting for approval” (about 308s). After that, `~/.grok/auth.json` was missing. Approving after the process died did not attach.
-- **Claude Code:** In an earlier install pass, not this Q&A round, `claude auth status` was logged out. Needs `claude` or `claude auth login` in a real terminal. Do not put an API key in chat.
-- **AGY:** Not opened this round. `agy` starts a browser login if the OS keyring has no token.
-- **Herdr:** No login command. `herdr` exits “cannot attach without a usable terminal: Not a tty”.
-- **Quirk:** `whoami` or login-status passing does not mean the next session starts. Codex adds a folder-trust prompt, Kiro adds a write-approval prompt, Grok can demand a fresh device login even when an auth file existed, and a device approval only counts if that process is still waiting.
+This is the session you launched, not the builder seat in sections 1–4. The source of truth for each peer is [docs/agents/_template.md](../../docs/agents/_template.md) and the matching [docs/agents/<name>.md](../../docs/agents/); answer in that same session and do not invent a command or a key.

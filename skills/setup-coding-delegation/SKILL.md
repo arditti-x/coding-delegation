@@ -9,13 +9,11 @@ description: >-
 
 # Setup coding delegation
 
-Before setup or launch, read the matching vendor section in `docs/vendor-tools.md` and prefer documented skills/commands over ad-hoc prompts.
+The source of truth for each peer is [docs/agents/_template.md](../../docs/agents/_template.md) and the matching [docs/agents/<name>.md](../../docs/agents/); do not invent installer, login, or agent commands.
 
 Run this skill before any coding handoff when preferences are missing or the
 user asks to reconfigure. Persist the result so later routing uses **only**
 what the user declared. Do not invent licenses the user did not confirm.
-
-For install and login, point the user at `docs/cli-setup.md` for the matching surface (or the generic section). Do not invent installer commands, binary names, or login steps.
 
 ## Prefs file
 

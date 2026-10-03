@@ -1,3 +1,5 @@
+> **Superseded by [docs/agents/](./agents/).** Use [docs/agents/_template.md](./agents/_template.md) and the matching per-agent file. Command, skill, question, and observation notes below are kept so old links do not 404. Do not treat this file as the source of truth.
+
 # Vendor tools: documented commands and skills
 
 Use the matching vendor section before launching a named peer. These are commands

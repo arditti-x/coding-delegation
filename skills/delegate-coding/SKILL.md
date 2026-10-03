@@ -47,8 +47,7 @@ Known surface keys (from setup):
 | `local_worktrees` | Isolated local git worktrees |
 
 `grok_build` follows the same TTY cloud path as AGY and Kiro: run the
-**coding-preflight** checks, launch only in a real TTY, and use the documented
-Grok Build / xAI CLI command and options. Do not infer a binary name or flags.
+**coding-preflight** checks and launch only in a real TTY.
 
 ## Routing rules
 
@@ -97,7 +96,7 @@ Grok Build / xAI CLI command and options. Do not infer a binary name or flags.
 6. Monitor only for idle, blocker, or PR; notify per the brief’s merge policy.
 7. Builder merges when CI is green; domain bot stays on product/MCP.
 
-Before launch, read the matching vendor section in `docs/vendor-tools.md` and prefer documented skills/commands over ad-hoc prompts.
+The source of truth for each peer is [docs/agents/_template.md](../../docs/agents/_template.md) and the matching [docs/agents/<name>.md](../../docs/agents/); do not duplicate or invent those instructions here.
 
 ## Sibling skills
 

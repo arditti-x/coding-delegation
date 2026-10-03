@@ -1,3 +1,5 @@
+> **Superseded by [docs/agents/](./agents/).** Use [docs/agents/_template.md](./agents/_template.md) and the matching per-agent file. Install and login notes below are kept so old links do not 404. Do not treat this file as the source of truth.
+
 # CLI and Herdr setup
 
 Install and login notes for the named coding-delegation peers, plus Herdr and a generic path for any other coding CLI.
