@@ -45,7 +45,7 @@ Skills become slash commands in the interactive CLI; a skill named `deploy-stagi
 ## Ongoing session and answering questions
 
 - **How it asks:** In Ask mode, an interactive prompt card appears in the TUI and the agent pauses for approval.
-- **How to answer:** `y` authorizes the proposed tool, command, or artifact. `n` rejects it. `Ctrl+K` approves the pending subagent action in the status alert. `Alt+J` moves to the next subagent waiting for confirmation.
+- **How to answer:** `y` authorizes the proposed tool, command, or artifact. `n` rejects it. `Ctrl+K` approves the pending subagent action in the status alert. `Alt+J` moves to the next subagent waiting for confirmation. Before allowing a file, URL, or MCP prompt, you can edit the target in the card to widen the grant for the rest of the turn; this does not work for terminal commands.
 - **Blocks:** Yes in the interactive TUI. Headless mode has no prompt: an Ask action is soft-denied, the run continues, and it exits 0.
 
 ## Observed behavior
@@ -60,10 +60,10 @@ unknown
 
 ## Checked
 
-2026-10-03
+2026-10-05
 
 ## Updated instructions
 
 - Install and login: https://antigravity.google/docs/cli/install/
 - Commands: https://antigravity.google/docs/cli/reference/
-- Session questions: https://antigravity.google/docs/cli/permissions/ and https://antigravity.google/docs/cli/headless/
+- Session questions: https://antigravity.google/docs/permissions?tab=cli and https://antigravity.google/docs/cli/headless/
