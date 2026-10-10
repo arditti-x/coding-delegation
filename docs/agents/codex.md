@@ -37,6 +37,11 @@ Codex cloud (no separate CLI install):
 - On the web or desktop app: **Work in > Cloud**, then select or create an environment (connect GitHub if prompted, review setup, **Publish**). On mobile, open Codex.
 - From the CLI, after the same ChatGPT login: `codex cloud` opens a picker; `codex cloud exec` submits a task; `codex cloud list` lists recent cloud chats. `codex apply` applies the latest cloud diff locally.
 
+## Auth status check
+
+- Command: `codex login status`. Logged in: exit 0 and `Logged in using ChatGPT` (or API key). Logged out: exit 1 and `Not logged in`. Both verified live on 2026-10-09 (Linux; logged-out case with an empty `HOME`).
+- Usage limits: no non-interactive usage command in `codex --help` (checked 2026-10-09). When a session reports a limit, record it with its reset date in the local usage-limits file (see `coding-preflight`).
+
 ## Commands and skills
 
 | Command or skill | Use it for |

@@ -30,6 +30,10 @@ Also documented: `brew install herdr`, `mise use -g herdr`, a Nix flake, and Git
 
 No Herdr account and no `herdr login` command are documented. Saved SSH machine profiles do not store passwords or keys. Remote machines use your existing OpenSSH auth (`ssh workbox` must already work). Add one with `herdr machine add workbox` in an interactive terminal. If a saved machine needs a key passphrase, `ssh-add` before Herdr’s background connections. Git or SSH signing inside remote panes needs `ForwardAgent yes` in your SSH config; Herdr does not turn that on for you.
 
+## Auth status check
+
+Not applicable: Herdr has no login. Check the inner agent's own status command from its file.
+
 ## Commands and skills
 
 | Command or skill | Use it for |

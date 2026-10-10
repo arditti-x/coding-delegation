@@ -62,6 +62,15 @@ Known surface keys (from setup):
 5. Honor `defaults`: never code on the main checkout; require a TTY for cloud
    CLIs when `require_tty_for_cloud_clis` is true; run **coding-preflight** when
    `preflight_before_launch` is true.
+6. A cloud key launches the cloud variant. `claude_code_cloud` is `claude --cloud "<task>"` in a real TTY via Herdr; `codex_cloud` is Codex cloud; other cloud keys use the cloud form in their `docs/agents/<agent>.md`. Running the local CLI of the same tool is a different surface and is allowed only if prefs list it.
+7. Before using a surface, check its auth and usage (`coding-preflight`, `scripts/auth-check.sh`). See **Login and usage limits** below.
+
+## Login and usage limits
+
+- If the surface's login has expired or it hit a usage limit, **STOP and alert the user** before falling back. Name the surface and what is needed (for example "Claude Code login expired; run the headless login" or "Cursor CLI usage exhausted, resets 2026-11-06").
+- Record the reset date when the tool shows one (see `coding-preflight`, step 3 of the auth gate).
+- Never fall back silently. After alerting, move to the next licensed peer in `preferences.order` only, and say which surface you moved to and why.
+- Any fallback from a cloud surface to a local CLI must be announced to the user with the reason, even when prefs allow that local surface.
 
 ## Decision guidance (prefs-driven)
 
@@ -69,6 +78,8 @@ Known surface keys (from setup):
 |-----------|--------|
 | User prefs name a first-choice surface that is licensed and fit | That surface |
 | First-choice unfit; next in `order` is fit | Next licensed peer in order |
+| First-choice logged out or out of usage | Alert the user (surface, what is needed, reset date if known), then the next licensed peer in order |
+| Prefs say `claude_code_cloud` | `claude --cloud` in a real TTY via Herdr, not local `claude` |
 | Need interactive cloud shell; prefs allow a TTY cloud CLI | Named TTY cloud CLI (TTY required) |
 | Must stay local; `local_worktrees` licensed | Git worktree (not main checkout) |
 | Product / MCP day-to-day usage | Domain bot (not builder) |
@@ -89,10 +100,10 @@ Known surface keys (from setup):
 ## Launch sequence
 
 1. Ensure setup is complete (see Setup gate).
-2. Run **coding-preflight** when defaults require it — abort if remotes, auth, or pushability fail.
+2. Run **coding-preflight** when defaults require it — abort if remotes, auth, usage, or pushability fail, and alert the user on auth or usage failures.
 3. Write the brief with **build-handoff-brief** (file on disk, not chat paste).
 4. Push a durable `fix/…` (or equivalent) branch before any cloud teleport when local work exists.
-5. Launch the surface selected from user prefs (peers only; no built-in ranking).
+5. Launch the surface selected from user prefs (peers only; no built-in ranking), in its cloud form when the key is a cloud surface.
 6. Monitor only for idle, blocker, or PR; notify per the brief’s merge policy.
 7. Builder merges when CI is green; domain bot stays on product/MCP.
 

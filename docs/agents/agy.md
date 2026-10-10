@@ -31,6 +31,10 @@ curl -fsSL https://antigravity.google/cli/install.cmd -o install.cmd && install.
 - Sign out inside the CLI with `/logout` (clears keyring profiles).
 - Optional, instead of an account session: set `"modelProvider": "gemini"` in `~/.gemini/antigravity-cli/settings.json` and `export GEMINI_API_KEY=...`. A key alone, without `modelProvider`, does nothing. Create the key in Google AI Studio.
 
+## Auth status check
+
+unknown, manual check. `agy --help` (checked 2026-10-09) lists no auth or status subcommand. Inside the TUI, `/usage` (alias `/quota`) shows model quota and `/credits` shows remaining credits; both are interactive. Source: https://antigravity.google/docs/cli/reference/ (checked 2026-10-09).
+
 ## Commands and skills
 
 | Command or skill | Use it for |

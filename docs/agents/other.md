@@ -25,6 +25,10 @@ In `coding-delegation.prefs.yaml`, set the surface up as a peer: add the name to
 
 If Herdr should track it, check https://herdr.dev/docs/agents/ for whether that agent is already recognized. If it is not, it can still run in a pane as a normal terminal.
 
+## Auth status check
+
+Use the vendor's documented non-interactive status or whoami command, if one exists, and record its URL and the date checked. If none exists, write `unknown, manual check`. Do not guess one.
+
 ## Commands and skills
 
 When using a coding CLI or agent not named above, find that vendor's current official skills and commands index, record its URL and the date checked, and use only commands documented there. Do not invent commands, slash commands, skills, or flags.
