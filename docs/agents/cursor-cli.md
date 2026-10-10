@@ -28,6 +28,11 @@ Verify: `agent --version`. The install docs say to put `~/.local/bin` on `PATH` 
 - If the browser does not open: `NO_OPEN_BROWSER=1 agent login` and open the printed URL.
 - API key: create one in Cursor Dashboard → API Keys, then `export CURSOR_API_KEY=...` or `agent --api-key ...`.
 
+## Auth status check
+
+- Command: `agent status --format json` (`whoami` is the same command). Logged in when `isAuthenticated` is `true`. Verified live on 2026-10-09 (Linux). The output contains the account email; never paste it raw.
+- Usage limits: `agent about` shows the subscription tier but not remaining usage. No non-interactive usage command in `agent --help` (checked 2026-10-09). A login that passes can still be out of usage; when a session reports a limit, record it with its reset date in the local usage-limits file (see `coding-preflight`).
+
 ## Commands and skills
 
 **Unknown.** The current official CLI pages do not publish a distinctive slash-command or named skill-invocation list.

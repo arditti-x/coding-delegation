@@ -12,6 +12,10 @@ None beyond Git, which you already use for the repo.
 
 Use whatever already authenticates you to `origin` (SSH key, `gh`, credential helper). This plugin does not add a second login. Preflight still has to confirm that helper can push the planned branch.
 
+## Auth status check
+
+Not applicable: no vendor login. Preflight checks that the git credential helper can push.
+
 ## Commands and skills
 
 unknown

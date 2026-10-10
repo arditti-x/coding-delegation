@@ -30,6 +30,10 @@ Start: `cd your-project` then `grok`. Version: `grok version`. Update: `grok upd
 - Headless or remote: `grok login --device-auth` (device-code auth).
 - Non-browser environments can skip the account session with `export XAI_API_KEY="xai-..."` and then `grok`.
 
+## Auth status check
+
+unknown, manual check. `grok --help` and https://docs.x.ai/build/cli/reference (checked 2026-10-09) list `grok login` and `grok logout` but no status or whoami subcommand. `grok usage <SESSION_ID>` reports token and cost usage for one session, not account quota. Do not infer login from `~/.grok/auth.json`; see Observed behavior.
+
 ## Commands and skills
 
 | Command or skill | Use it for |

@@ -55,7 +55,7 @@ Also documented: `brew install --cask claude-code`, `winget install Anthropic.Cl
 
 - Run `claude`. On first launch it opens a browser. Account types in the quickstart: Claude Pro, Max, Team, or Enterprise; Claude Console (API credits); Amazon Bedrock, Google Cloud’s Agent Platform, or Microsoft Foundry; or a self-hosted Claude apps gateway.
 - If `ANTHROPIC_API_KEY` is set, the quickstart says Claude Code skips the browser login and asks you to approve the key.
-- Re-authenticate inside a session with `/login`. CLI form from the CLI reference: `claude auth login` (optional `--email`, `--sso`, `--console`). Status: `claude auth status`. Logout: `claude auth logout` or `/logout`.
+- Re-authenticate inside a session with `/login`. CLI form from the CLI reference: `claude auth login` (optional `--claudeai`, `--email`, `--sso`, `--console`). Status: `claude auth status`. Headless box: see the Headless box login steps in docs/agents/claude-code.md. Logout: `claude auth logout` or `/logout`.
 - Cloud sessions need the same claude.ai account (`claude auth login`). They are not available when Claude Code is configured only for a third-party provider such as Bedrock. Start a new cloud session with `claude --cloud "task"`. The cloud VM clones the current directory’s GitHub remote at the current branch, so push local commits first. Pull a cloud session back with `claude --teleport`.
 - GitHub for cloud sessions: authorize the Claude GitHub App during web onboarding, or run `/web-setup` in the terminal to send the local `gh` CLI token to the Claude account (Teams/Enterprise may hide `/web-setup` until an Owner enables Quick web setup).
 

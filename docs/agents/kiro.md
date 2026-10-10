@@ -21,6 +21,13 @@ Start: `cd my-project` then `kiro-cli`.
 - Check which method is active: `kiro-cli whoami`. Re-auth after a failure: `kiro-cli login`.
 - CI/headless (paid plans; an admin may have to enable it): create a key at [app.kiro.dev](https://app.kiro.dev) under API Keys, then `export KIRO_API_KEY=...` and `kiro-cli chat --no-interactive "..."`. Browser session from `kiro-cli login` takes precedence over `KIRO_API_KEY`.
 
+## Auth status check
+
+- Command: `kiro-cli whoami`. Logged in: exit 0 and `Logged in with <method>`. Verified live on 2026-10-09 (Linux). The output contains the account email; never paste it raw.
+- `kiro-cli whoami --format json` hung past 20s on 2026-10-09; use the plain form.
+- Logged-out output was not observed live; the script treats anything other than a logged-in result as unknown (needs attention).
+- Usage limits: unknown; no usage command in `kiro-cli --help-all` (checked 2026-10-09).
+
 ## Commands and skills
 
 | Command or skill | Use it for |

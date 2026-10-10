@@ -15,6 +15,10 @@ No local install.
 - Start agents from [cursor.com/agents](https://cursor.com/agents), from Cursor Desktop (Cloud in the agent-input dropdown), or from the other surfaces listed in the docs (iOS, Slack, GitHub or Bitbucket `@cursor`, Linear, API).
 - If a run does not start, the docs say to confirm you are logged in, source control is connected, repository permissions are sufficient, and the account is on a paid plan.
 
+## Auth status check
+
+unknown, manual check. No local CLI or status command for this surface; confirm login, source control, and plan at https://cursor.com/agents. Source: https://cursor.com/docs/cloud-agent (checked 2026-10-09).
+
 ## Commands and skills
 
 **Unknown.** The current official Cloud Agents launch documentation does not publish a slash-command or skill-invocation list for this surface.

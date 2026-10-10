@@ -111,7 +111,7 @@ Dashboard → Marketplace → Coding Delegation → Enable
    surface. Persist prefs; set `setup_complete: true`.
 2. When routing repo/PR work, invoke **delegate-coding** (it re-runs setup if
    needed).
-3. Before launch, run **coding-preflight** (abort if remotes/auth fail).
+3. Before launch, run **coding-preflight** (abort if remotes/auth fail). It starts with `bash scripts/auth-check.sh`, which prints one line per surface (ok, logged out, usage exhausted, not installed, unknown) and exits non-zero when any needs attention, so a scheduled routine can alert. A logged-out or out-of-usage surface is reported to the user before any fallback.
 4. Write the brief with **build-handoff-brief**; pass the file path to the
    builder or chosen surface.
 5. For builder questions and replies, use **agent-comms**; message with the brief
@@ -147,6 +147,8 @@ coding-delegation/
 ├── PROOF.md
 ├── assets/
 │   └── logo.png
+├── scripts/
+│   └── auth-check.sh
 └── skills/
     ├── setup-coding-delegation/SKILL.md
     ├── delegate-coding/SKILL.md
