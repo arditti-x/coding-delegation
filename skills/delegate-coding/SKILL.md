@@ -109,6 +109,23 @@ Known surface keys (from setup):
 
 The source of truth for each peer is [docs/agents/_template.md](../../docs/agents/_template.md) and the matching [docs/agents/<name>.md](../../docs/agents/); do not duplicate or invent those instructions here.
 
+## Mac laptop surface (Claude Code remote control)
+
+Use only for Mac-only work (Xcode builds, iOS simulator checks). The Mac has Claude Code, Xcode, an iOS simulator, and tmux. Each machine-targeted Shell call needs the user's approval, and the Mac must be awake (it is not always on). Use it per task, not as an always-on session.
+
+Always start Claude with remote control so the session shows in the user's Claude app. In the project folder:
+
+```bash
+tmux new-session -d -s <name> -x 200 -y 50 "claude --remote-control <name>"
+```
+
+- Folder-trust prompt: answer with `tmux send-keys -t <name> Down` then `tmux send-keys -t <name> Enter`, only for folders we created or own.
+- Send prompts: `tmux send-keys -t <name> -l '<prompt>'`, then a separate `tmux send-keys -t <name> Enter`.
+- Read output: `tmux capture-pane -p -J -t <name> -S -N` (N = lines of scrollback), filtering blank lines (for example `| grep -v '^\s*$'`).
+- Frugal usage: drive the session through the terminal on the Mac (tmux over the machine shell), never through claude.ai/code in the agent's browser. Screenshots cost far more usage. Do not use `claude remote-control --session-id` / `--continue` or teleport from the agent box; those move the session off the Mac.
+- Never use plain `claude -p` on the Mac; always remote control.
+- If the Mac reports "OAuth access token has expired", alert the user to run `claude auth login` on the Mac (same stop-and-alert rule as **Login and usage limits**; no silent fallback).
+
 ## Sibling skills
 
 - `setup-coding-delegation` — licenses, order, and when-to-use prefs.

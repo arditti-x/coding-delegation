@@ -64,6 +64,7 @@ If `claude auth status` shows `loggedIn: false` on a headless box, use the **Hea
 | Cursor Cloud Agents | Repo is linked; agent can clone and open PR; brief path reachable or content inlined once. |
 | Claude / Codex / Cursor CLI / AGY / Kiro / Grok Build / other TTY cloud CLIs | Session is a real **TTY**; use cloud-first options as documented by that CLI; bare non-TTY cloud CLIs are disallowed. |
 | Git worktree | Path is outside the main working tree; branch is checked out only in that worktree. |
+| Mac laptop (Claude Code remote control) | Mac awake; start with `tmux` + `claude --remote-control` (never plain `claude -p`); drive via terminal/tmux, not claude.ai/code screenshots; on OAuth expiry stop and alert for `claude auth login` on the Mac. |
 
 ## Abort conditions
 
