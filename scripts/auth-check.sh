@@ -14,8 +14,9 @@
 #   --only a,b        check only these surfaces (claude-code,cursor-cli,codex,agy,kiro,grok-build,cursor-cloud-agents)
 #   --timeout SECS    per-command timeout (default 60; env AUTH_CHECK_TIMEOUT)
 #
-# Usage limits: no surface here exposes a non-interactive usage/quota command, so
-# usage limits come from a local record the skills write when a limit is hit:
+# Usage limits recorded by a session still come from a local file. Live remaining
+# usage for model routing is separate: Claude `/usage`, Codex
+# account/rateLimits/read (never rateLimitResetCredit/consume), Cursor unknown.
 #   ${CODING_DELEGATION_USAGE_FILE:-~/.config/coding-delegation/usage-limits}
 # One line per limit:  <surface> <reset YYYY-MM-DD or unknown> [note]
 # A line stops counting once its reset date has passed. Keep this file out of git.

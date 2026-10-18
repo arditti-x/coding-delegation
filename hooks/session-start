@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+# SessionStart entrypoint. Resolves the plugin root from this file so the
+# hook works when the host's working directory is the user's repo.
+set -euo pipefail
+ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+exec python3 "$ROOT/hooks/session-start.py"

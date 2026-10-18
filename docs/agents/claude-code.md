@@ -59,7 +59,7 @@ Keep real codes, state values, authorize URLs with real challenge values, and th
 
 - Command: `claude auth status` (JSON by default; `--json` or `--text`). Logged in when `loggedIn` is `true`. Verified live on 2026-10-09 (Linux): returns JSON with `loggedIn`; the output also contains the account email, so never paste it raw.
 - Logged-out output was not observed live; the script treats `"loggedIn": false` as logged out and anything else as unknown.
-- Usage limits: no non-interactive usage command found in the CLI help (`claude --help`, `claude auth status --help`, checked 2026-10-09). When a session reports a limit, record it in the local usage-limits file (see `coding-preflight`).
+- Usage limits: `claude -p "/usage" --output-format json </dev/null` returns a JSON `result` string the model router parses (unofficial in `-p`; it still returns text at a limit). A limit error from a job is exit 1 with `api_error_status` 429 and `api_error` `usage_limit_reached`. The model that actually ran is the stream-json `system`/`init` `model` field. `--fallback-model` does not trip on usage limits. When a session reports a limit, also record it in the local usage-limits file (see `coding-preflight`).
 
 ## Commands and skills
 
@@ -87,6 +87,7 @@ Observed 2026-10-03 (live sessions, Linux):
 ## Quirks
 
 - `claude --cloud` (Claude Code cloud) and plain `claude` (local) are different surfaces in prefs (`claude_code_cloud` vs a local CLI entry). Do not substitute one for the other; see `delegate-coding`.
+- Open item: it is untested whether `claude --cloud` honors `--model` or needs `ANTHROPIC_MODEL` on the cloud environment. Recheck after 2026-10-20.
 - A login code copied by a remote viewer does not reach the box clipboard; read it from the callback URL instead (Headless box login, step 3).
 
 ## Checked

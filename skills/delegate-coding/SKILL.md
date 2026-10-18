@@ -27,10 +27,12 @@ Before routing:
 
 ## Surfaces (peers)
 
-Treat every licensed surface as a peer. There is **no** built-in preference among
-Cursor Cloud Agents, Claude Code cloud, Codex cloud, Cursor CLI, Antigravity
-AGY, Kiro, Grok Build, other TTY cloud CLIs, or local worktrees. Ranking comes only from
-`preferences.order` and the free-text `preferences.when` notes the user set.
+Treat every licensed surface as a peer. Tool order comes only from
+`preferences.order`, `routing.first_tool`, and the free-text `preferences.when`
+notes the user set. Model choice uses the opt-in tier catalog in
+`data/tiers.yaml`: frontier (fable / astra) stays off unless the user allowed
+it; hard jobs use strong (opus / sol), normal jobs use standard (sonnet / terra),
+and small jobs use fast (haiku / luna). Cursor's default model is `grok-4.7`.
 
 Known surface keys (from setup):
 
@@ -48,6 +50,38 @@ Known surface keys (from setup):
 
 `grok_build` follows the same TTY cloud path as AGY and Kiro: run the
 **coding-preflight** checks and launch only in a real TTY.
+
+## Model routing
+
+After the surface is licensed, resolve the model with the pre-job checks
+before launch. Run, from the plugin root, with usage captured to files (do
+not paste account emails):
+
+```bash
+python3 scripts/route-model.py choose \
+  --difficulty normal \
+  --bytes 0 \
+  --roundtrip 0 \
+  --user "${CODING_DELEGATION_USER_PREFS:-$HOME/.config/coding-delegation/prefs.yaml}" \
+  --claude-usage /tmp/claude-usage.json \
+  --codex-rate-limits /tmp/codex-rates.json \
+  --codex-models /tmp/codex-models.json
+```
+
+Capture those files without spending credits:
+
+- Claude Code: `claude -p "/usage" --output-format json </dev/null`
+- Codex models: `codex debug models </dev/null`
+- Codex usage: `account/rateLimits/read` on `codex app-server --listen unix://…` with stdin from `/dev/null`. Never call `account/rateLimitResetCredit/consume`.
+- Cursor: no public per-user usage API. Do not call the dashboard. Leave the usage unknown.
+
+`--difficulty` is `hard`, `normal`, or `small`. Add `--frontier` only when this job is flagged and the user's frontier policy is `flagged`. Hard jobs re-read usage. Skip at >= 90% of any window, when blocked or spend-capped, when the context need exceeds 0.6 of the usable window, or when the plan bills extra and the user did not allow it.
+
+Use the JSON `launch` argv only when `action` is `launch`. `ask` or `stop` means ask the user. On a limit error, another error, or a stall past `stall_timeout_min`, hand off only within the same tier, and only automatically when `on_limit_or_stall` is `handoff`. Otherwise ask. Tell the user either way. Log the tool, resolved model, and usage snapshot.
+
+Tests and CI pass `--fixtures tests/fixtures` and must not run a real CLI.
+
+**Open item.** It is untested whether `claude --cloud` honors `--model` or needs `ANTHROPIC_MODEL` on the cloud environment. Recheck after 2026-10-20.
 
 ## Routing rules
 
@@ -103,7 +137,7 @@ Known surface keys (from setup):
 2. Run **coding-preflight** when defaults require it — abort if remotes, auth, usage, or pushability fail, and alert the user on auth or usage failures.
 3. Write the brief with **build-handoff-brief** (file on disk, not chat paste).
 4. Push a durable `fix/…` (or equivalent) branch before any cloud teleport when local work exists.
-5. Launch the surface selected from user prefs (peers only; no built-in ranking), in its cloud form when the key is a cloud surface.
+5. Launch the surface selected from user prefs, in its cloud form when the key is a cloud surface. The model comes from the opt-in tier catalog, not from a built-in vendor rank.
 6. Monitor only for idle, blocker, or PR; notify per the brief’s merge policy.
 7. Builder merges when CI is green; domain bot stays on product/MCP.
 

@@ -1,0 +1,41 @@
+# Opt-in model tiers for coding-delegation.
+# Families, not versions. Update this file without changing code.
+# This file does not rank tools or vendors. Tool order comes from each user's prefs.
+# Frontier is opt-in: nothing here enables it.
+
+tiers:
+  frontier:
+    opt_in: true
+    families: [fable, astra]
+  strong:
+    families: [opus, sol]
+  standard:
+    families: [sonnet, terra]
+  fast:
+    families: [haiku, luna]
+
+# Job size maps to a tier. Frontier is not in this map.
+difficulty_tier:
+  hard: strong
+  normal: standard
+  small: fast
+
+# Claude Code aliases are already the newest model in each family.
+claude_aliases:
+  fable: fable
+  opus: opus
+  sonnet: sonnet
+  haiku: haiku
+
+# Codex families resolve at runtime from `codex debug models`.
+# Keep only visibility "list". Match slug_pattern. Highest version wins.
+codex:
+  families: [astra, sol, terra, luna]
+  slug_pattern: '^gpt-(\d+(?:\.\d+)*)-([a-z]+)$'
+  visible_value: list
+  # Used only when a listed model omits effective_context_window_percent.
+  effective_context_window_percent: 95
+
+# Cursor has no public model-family catalog. The adapter default is one model.
+cursor:
+  default_model: grok-4.7

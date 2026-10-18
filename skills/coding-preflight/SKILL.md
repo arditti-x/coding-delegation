@@ -20,6 +20,7 @@ surfaces.
 2. If the chosen surface is logged out, out of usage, or `unknown`: **STOP and alert the user before doing anything else.** Name the surface and what is needed, for example "Claude Code is logged out; needs the headless login in docs/agents/claude-code.md" or "Codex usage is exhausted until 2026-10-25". Do not fall back to the next surface silently. Fall back only after the alert, and say which surface you are moving to and why.
 3. When a session reports a usage limit, record it in `~/.config/coding-delegation/usage-limits` (override with `CODING_DELEGATION_USAGE_FILE`), one line per limit: `<surface> <reset YYYY-MM-DD or unknown> [note]`, using the script's surface names (`claude-code`, `cursor-cli`, `codex`, `agy`, `kiro`, `grok-build`, `cursor-cloud-agents`). Use the reset date the tool showed; write `unknown` if it showed none. The script reports `usage exhausted` until that date passes. This file is local; never commit it.
 4. Never paste status output raw: several status commands print the account email. The script prints neither emails nor tokens.
+5. Model routing reads remaining usage separately from this login check. Claude uses `claude -p "/usage" --output-format json </dev/null`. Codex uses app-server `account/rateLimits/read` and never `account/rateLimitResetCredit/consume`, with stdin from `/dev/null`. Cursor usage is unknown; do not call the dashboard. A tool at or above 90% of any window is skipped by `scripts/route-model.py` before launch.
 
 ## Cloud keys mean cloud launches
 

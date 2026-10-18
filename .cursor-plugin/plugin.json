@@ -1,8 +1,8 @@
 {
 	"name": "coding-delegation",
 	"displayName": "Coding Delegation",
-	"version": "0.3.2",
-	"description": "Agent-agnostic coding handoff: asks for licenses and routing prefs on setup; routes Cloud Agents / Claude / Codex / Cursor CLI / AGY / Kiro / Grok Build / worktrees as peers — without replacing a builder seat.",
+	"version": "0.4.0",
+	"description": "Agent-agnostic coding handoff with an opt-in model tier catalog. Tool order comes from each user's answers. Does not replace a builder seat.",
 	"author": {
 		"name": "arditti-x"
 	},

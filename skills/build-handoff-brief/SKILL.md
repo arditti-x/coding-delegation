@@ -58,7 +58,7 @@ builder or the prefs-selected coding surface executes it.
 - On PR ready:
 
 ## Notes for executor
-- Route per coding-delegation prefs (licensed surfaces as peers; no built-in default ranking).
+- Route per coding-delegation prefs. Tool order comes from the user. The model comes from the opt-in tier catalog (frontier off unless allowed).
 - Never edit the main checkout; use a worktree or cloud session branch.
 - Push durable fix/… before cloud teleport if local work exists.
 - Require a TTY for cloud CLIs when prefs say so.

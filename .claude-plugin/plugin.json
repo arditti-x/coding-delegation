@@ -1,0 +1,109 @@
+{
+  "name": "coding-delegation",
+  "version": "0.4.0",
+  "description": "Agent-agnostic coding handoff with an opt-in model tier catalog. Tool order comes from each user's answers.",
+  "skills": "./skills/",
+  "hooks": "./hooks/hooks.json",
+  "userConfig": {
+    "tool_claude": {
+      "type": "boolean",
+      "title": "You pay for Claude Code",
+      "description": "Enable Claude Code for model routing.",
+      "default": false
+    },
+    "tool_codex": {
+      "type": "boolean",
+      "title": "You pay for Codex CLI",
+      "description": "Enable Codex CLI for model routing.",
+      "default": false
+    },
+    "tool_cursor": {
+      "type": "boolean",
+      "title": "You pay for Cursor",
+      "description": "Enable Cursor for model routing.",
+      "default": false
+    },
+    "plan_claude": {
+      "type": "string",
+      "title": "Claude Code plan",
+      "description": "included is covered by the subscription. extra bills more and is skipped unless you allow extra spend.",
+      "options": ["included", "extra"],
+      "default": "included"
+    },
+    "plan_codex": {
+      "type": "string",
+      "title": "Codex plan",
+      "description": "included is covered by the subscription. extra bills more and is skipped unless you allow extra spend.",
+      "options": ["included", "extra"],
+      "default": "included"
+    },
+    "plan_cursor": {
+      "type": "string",
+      "title": "Cursor plan",
+      "description": "included is covered by the subscription. extra bills more and is skipped unless you allow extra spend.",
+      "options": ["included", "extra"],
+      "default": "included"
+    },
+    "first_tool": {
+      "type": "string",
+      "title": "Preferred first tool",
+      "description": "Used only as your tie-break. No tool is preferred until you choose.",
+      "options": ["no preference", "claude", "codex", "cursor"],
+      "default": "no preference"
+    },
+    "frontier": {
+      "type": "string",
+      "title": "Frontier models",
+      "description": "Frontier stays off unless you allow it.",
+      "options": ["never", "when I flag a job", "automatically"],
+      "default": "never"
+    },
+    "extra_spend": {
+      "type": "string",
+      "title": "Extra spend",
+      "description": "Nothing that bills extra is routed unless this allows it.",
+      "options": ["deny", "per job", "capped"],
+      "default": "deny"
+    },
+    "extra_spend_cap": {
+      "type": "number",
+      "title": "Extra-spend cap",
+      "description": "Used only when extra spend is capped. Zero allows no extra spend.",
+      "default": 0
+    },
+    "reviewer": {
+      "type": "string",
+      "title": "Reviewer",
+      "description": "Who reviews a finished job.",
+      "options": ["other vendor", "same", "none"],
+      "default": "none"
+    },
+    "on_limit_or_stall": {
+      "type": "string",
+      "title": "Limit or stall",
+      "description": "What to do when a job hits a limit, an error, or your stall timeout.",
+      "options": ["hand off and tell me", "ask first"],
+      "default": "ask first"
+    },
+    "stall_timeout": {
+      "type": "string",
+      "title": "Stall timeout",
+      "description": "Minutes with no progress before a stall fallback.",
+      "options": ["15", "30", "60"],
+      "default": "30"
+    },
+    "versions": {
+      "type": "string",
+      "title": "Model versions",
+      "description": "newest resolves each family to the newest listed model. pin uses the pins field.",
+      "options": ["newest", "pin"],
+      "default": "newest"
+    },
+    "pins": {
+      "type": "string",
+      "title": "Pinned models",
+      "description": "Only when versions is pin. Space-separated family=model pairs, such as sol=gpt-6-sol.",
+      "default": ""
+    }
+  }
+}

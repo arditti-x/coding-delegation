@@ -31,7 +31,7 @@ Verify: `agent --version`. The install docs say to put `~/.local/bin` on `PATH` 
 ## Auth status check
 
 - Command: `agent status --format json` (`whoami` is the same command). Logged in when `isAuthenticated` is `true`. Verified live on 2026-10-09 (Linux). The output contains the account email; never paste it raw.
-- Usage limits: `agent about` shows the subscription tier but not remaining usage. No non-interactive usage command in `agent --help` (checked 2026-10-09). A login that passes can still be out of usage; when a session reports a limit, record it with its reset date in the local usage-limits file (see `coding-preflight`).
+- Usage limits: no public per-user usage API. Do not call Cursor's dashboard. Model routing treats Cursor usage as unknown and sorts it after tools whose remaining usage is known. `agent about` shows the subscription tier but not remaining usage. The adapter default model is `grok-4.7` (`agent --model grok-4.7`); a user pin replaces it. A login that passes can still be out of usage; when a session reports a limit, record it with its reset date in the local usage-limits file (see `coding-preflight`).
 
 ## Commands and skills
 

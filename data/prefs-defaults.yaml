@@ -1,0 +1,52 @@
+# Plugin defaults for coding-delegation.
+# Generic on purpose: no tool order, no vendor rank, no person, no account, no plan dates.
+# A user's answers live in their own prefs file, outside this repo.
+
+licenses:
+  cursor_cloud_agents: false
+  claude_code_cloud: false
+  codex_cloud: false
+  cursor_cli: false
+  agy_cloud: false
+  kiro_cloud: false
+  grok_build: false
+  other_tty_cloud_clis: []
+  local_worktrees: true
+preferences:
+  order: []
+  when: {}
+  defaults:
+    never_main_checkout: true
+    require_tty_for_cloud_clis: true
+    preflight_before_launch: true
+models:
+  # newest: resolve each family to the newest listed model.
+  # pin: use models.pins (family -> exact model id).
+  policy: newest
+  pins: {}
+routing:
+  # never | flagged | auto. Frontier stays off unless the user changes this.
+  frontier: never
+  # deny | per_job | capped. Nothing that bills extra is routed unless this allows it.
+  extra_spend: deny
+  extra_spend_cap: 0
+  # none | same | other_vendor
+  reviewer: none
+  # ask_first | handoff
+  on_limit_or_stall: ask_first
+  # 15, 30, or 60
+  stall_timeout_min: 30
+  first_tool: null
+  cost_order: []
+  setup_complete: false
+  tools:
+    claude:
+      enabled: false
+      plan: included
+    codex:
+      enabled: false
+      plan: included
+    cursor:
+      enabled: false
+      plan: included
+setup_complete: false

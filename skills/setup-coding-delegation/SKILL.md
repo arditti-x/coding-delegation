@@ -3,8 +3,9 @@ name: setup-coding-delegation
 description: >-
   Use on first install, when coding-delegation prefs are missing or incomplete,
   or when the user says "configure coding delegation" or wants to change
-  licenses or routing preferences. Collects which surfaces are licensed and
-  how to prefer them; does not invent licenses.
+  licenses or routing preferences. Collects which surfaces are licensed,
+  how to prefer them, and the model-routing answers. Does not invent licenses
+  or a tool order.
 ---
 
 # Setup coding delegation
@@ -17,9 +18,12 @@ what the user declared. Do not invent licenses the user did not confirm.
 
 ## Prefs file
 
-Agents should load and write preferences from one of these paths (first that
-exists wins for read; for first-time write, prefer the repo copy if the agent
-is in a git checkout, otherwise the home config path):
+Agents should load preferences by deep-merging, highest precedence first:
+per-job flag, then the repo file, then the user file, then plugin defaults in
+`data/prefs-defaults.yaml`. This replaces "first file wins" (a repo file used
+to hide the user file). A key left out of a higher file keeps the lower value.
+For a first-time write, prefer the repo copy if the agent is in a git checkout,
+otherwise the home config path:
 
 - `coding-delegation.prefs.yaml` in the current repository root
 - `~/.config/coding-delegation/prefs.yaml`
@@ -55,6 +59,29 @@ preferences:
     require_tty_for_cloud_clis: true
     preflight_before_launch: true
 setup_complete: false
+models:
+  policy: newest
+  pins: {}
+routing:
+  frontier: never
+  extra_spend: deny
+  extra_spend_cap: 0
+  reviewer: none
+  on_limit_or_stall: ask_first
+  stall_timeout_min: 30
+  first_tool: null
+  cost_order: []
+  setup_complete: false
+  tools:
+    claude:
+      enabled: false
+      plan: included
+    codex:
+      enabled: false
+      plan: included
+    cursor:
+      enabled: false
+      plan: included
 ```
 
 Agents may also store the same fields in durable agent memory if a local file
@@ -87,10 +114,10 @@ surfaces `false`. Do not assume any surface is licensed.
 ### b) Preferred order among the licensed surfaces
 
 Ask the user to rank **only** the surfaces they licensed. The ordered list
-becomes `preferences.order`. There is no built-in default ranking. If they
+becomes `preferences.order`. Do not invent a ranking. If they
 skip ranking, leave `order` empty and ask again before the first
-`delegate-coding` launch, or treat all licensed surfaces as equal peers and
-ask which to use for that task.
+`delegate-coding` launch. Model choice still uses the opt-in tier catalog;
+frontier stays off unless they allow it below.
 
 ### c) Optional when-to-use notes
 
@@ -102,10 +129,54 @@ Confirm `defaults` (or keep the documented defaults unless the user changes
 them): never edit the main checkout; require a TTY for cloud CLIs; run
 preflight before launch.
 
+## Model routing questions
+
+Ask these only with the choices below. Do not add a vendor ranking, a person's
+name, an account id, or a plan date. Claude Code already asked them at install
+via `.claude-plugin/plugin.json` `userConfig`; if that config is present, map
+it into this file and skip questions the user already answered. On Codex, call
+`request_user_input` with **at most 3 questions per call**, one batch at a
+time. Cursor asks the same batches in the session.
+
+Write the answers into `models` and `routing`, then set
+`routing.setup_complete: true`.
+
+### Batch 1 — tools you pay for
+
+One yes/no each:
+
+- Claude Code (`routing.tools.claude.enabled`)
+- Codex CLI (`routing.tools.codex.enabled`)
+- Cursor (`routing.tools.cursor.enabled`)
+
+### Batch 2 — plan for each enabled tool
+
+`included` or `extra`. `extra` means the tool bills beyond the subscription.
+Those tools are not routed unless extra spend is allowed below. Leave disabled
+tools at `included`.
+
+### Batch 3 — order, frontier, extra spend
+
+- Preferred first tool: `no preference`, `claude`, `codex`, or `cursor` (only tools they enabled). Store `routing.first_tool`. This is their order, not a default.
+- Frontier: `never`, `when I flag a job`, or `automatically`. Default `never`. Store `routing.frontier` as `never`, `flagged`, or `auto`.
+- Extra spend: `deny`, `per job`, or `capped`. Default `deny`. If capped, ask the cap as a number and store `routing.extra_spend_cap`. Zero means no extra spend.
+
+### Batch 4 — reviewer, limits, stall
+
+- Reviewer: `other vendor`, `same`, or `none`.
+- When a job hits a limit, an error, or a stall: `hand off and tell me`, or `ask first`. Default `ask first`.
+- Stall timeout: `15`, `30`, or `60` minutes. Default `30`.
+
+### Batch 5 — versions
+
+- `newest` or `pin`. If they pin, ask for `family=model` pairs (for example `sol=gpt-6-sol`) and store them under `models.pins`. Claude aliases stay the alias (`opus`, `sonnet`, `haiku`, `fable`) unless pinned.
+
+The tier catalog itself is not a question. Frontier is fable / astra, strong is opus / sol, standard is sonnet / terra, fast is haiku / luna, and Cursor's default model is `grok-4.7`.
+
 ## Persist and finish
 
 1. Write the YAML (or equivalent memory) with only confirmed licenses.
-2. Set `setup_complete: true`.
+2. Set `setup_complete: true` and `routing.setup_complete: true`.
 3. Tell the user where prefs were saved and that they can re-run this skill to
    change licenses or order later.
 4. Do not launch coding work from this skill; hand off to `delegate-coding`

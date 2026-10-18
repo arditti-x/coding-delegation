@@ -40,7 +40,7 @@ Codex cloud (no separate CLI install):
 ## Auth status check
 
 - Command: `codex login status`. Logged in: exit 0 and `Logged in using ChatGPT` (or API key). Logged out: exit 1 and `Not logged in`. Both verified live on 2026-10-09 (Linux; logged-out case with an empty `HOME`).
-- Usage limits: no non-interactive usage command in `codex --help` (checked 2026-10-09). When a session reports a limit, record it with its reset date in the local usage-limits file (see `coding-preflight`).
+- Usage limits: app-server JSON-RPC `account/rateLimits/read` (`usedPercent`, `resetsAt`, `ordinaryUsageAllowed`, `rateLimitReachedType`). Run `codex app-server --listen unix://PATH` with stdin from `/dev/null`. Never call `account/rateLimitResetCredit/consume`. `codex exec` and `codex debug models` also need stdin from `/dev/null`; without it, exec prints `Reading additional input from stdin...` and hangs. Set the model with `codex exec -m <model>`. The model that actually ran is the session-log `turn_context` `model`, not the exec jsonl. A limit error is exit 1 plus `turn.failed`. A bad model is that same shape with a model-not-found or not-supported message. List models with `codex debug models` and keep `visibility` `list`. When a session reports a limit, also record it in the local usage-limits file (see `coding-preflight`).
 
 ## Commands and skills
 

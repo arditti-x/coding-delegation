@@ -1,0 +1,17 @@
+{
+  "description": "Ask the coding-delegation setup skill when model-routing prefs are missing. Claude Code and Codex load this file.",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup|resume|clear|compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "\"${CLAUDE_PLUGIN_ROOT}/hooks/session-start\"",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
+  }
+}

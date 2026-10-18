@@ -1,0 +1,67 @@
+{
+  "models": [
+    {
+      "slug": "gpt-6.1-sol",
+      "display_name": "gpt-6.1-sol",
+      "visibility": "list",
+      "context_window": 500000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "gpt-6-astra",
+      "display_name": "gpt-6-astra",
+      "visibility": "list",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "gpt-6-sol",
+      "display_name": "gpt-6-sol",
+      "visibility": "list",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "gpt-6-luna",
+      "display_name": "gpt-6-luna",
+      "visibility": "list",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "gpt-reserve",
+      "display_name": "gpt-reserve",
+      "visibility": "hide",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "gpt-5.6-sol",
+      "display_name": "gpt-5.6-sol",
+      "visibility": "list",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "gpt-5.6-terra",
+      "display_name": "gpt-5.6-terra",
+      "visibility": "list",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "gpt-5.6-luna",
+      "display_name": "gpt-5.6-luna",
+      "visibility": "list",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    },
+    {
+      "slug": "codex-auto-review",
+      "display_name": "codex-auto-review",
+      "visibility": "hide",
+      "context_window": 272000,
+      "effective_context_window_percent": 95
+    }
+  ]
+}
