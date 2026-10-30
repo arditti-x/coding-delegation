@@ -40,9 +40,15 @@ routing:
   cost_order: []
   setup_complete: false
   tools:
+    # Backwards-compatible name: `claude` is the Claude subscription pool.
     claude:
       enabled: false
       plan: included
+    # Separate API-key-backed Claude pool. Disabled and extra-spend by default
+    # so adding an API key can never silently start metered billing.
+    claude_api:
+      enabled: false
+      plan: extra
     codex:
       enabled: false
       plan: included

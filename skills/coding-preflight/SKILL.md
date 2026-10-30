@@ -22,6 +22,26 @@ surfaces.
 4. Never paste status output raw: several status commands print the account email. The script prints neither emails nor tokens.
 5. Model routing reads remaining usage separately from this login check. Claude uses `claude -p "/usage" --output-format json </dev/null`. Codex uses app-server `account/rateLimits/read` and never `account/rateLimitResetCredit/consume`, with stdin from `/dev/null`. Cursor usage is unknown; do not call the dashboard. A tool at or above 90% of any window is skipped by `scripts/route-model.py` before launch.
 
+### Claude billing-pool auth gate
+
+When model routing has selected a Claude billing pool, use the explicit pool check rather than treating all Claude launches as the same auth path:
+
+- `billing_pool: claude_subscription` → run `bash <plugin>/scripts/auth-check.sh --only claude-subscription`. The Claude subscription login must be valid. If `ANTHROPIC_API_KEY` happens to exist in the orchestrator environment, that is not itself a failure, but the launch contract **must remove it from the child environment** before spawning Claude.
+- `billing_pool: claude_api` → run `bash <plugin>/scripts/auth-check.sh --only claude-api`. This checks only that the Claude binary exists and that `ANTHROPIC_API_KEY` is non-empty; it never prints the key and does not make a billable API call. If the key is missing, **STOP and alert the user; do not launch and do not fall back to subscription or another billing path silently.**
+
+If the generic preflight was run before model routing, run this billing-pool gate immediately after `route-model.py choose` and before spawn.
+
+## Launch-contract gate (run immediately before spawn)
+
+When routing returns `action: launch`, treat the entire JSON `launch` object as mandatory execution metadata:
+
+1. Remove every variable listed in `launch.unset_env` from the child-process environment.
+2. Verify every variable listed in `launch.require_env` is present and non-empty. If any is absent, **STOP and alert**.
+3. Do not print, log, or copy required environment values; only report presence/absence.
+4. Execute `launch.argv` only with the sanitized/validated child environment and the requested stdin mode.
+
+For the Claude pools this is what prevents a subscription launch from silently inheriting an API key and what makes the API pool fail closed when no key is available.
+
 ## Cloud keys mean cloud launches
 
 A prefs key that names a cloud surface must launch that cloud variant. The local CLI with the same binary is a different surface.
@@ -49,6 +69,7 @@ If `claude auth status` shows `loggedIn: false` on a headless box, use the **Hea
 - [ ] Git credentials or credential helper can authenticate to the remote.
 - [ ] Host CLI / cloud coding identity for the **chosen** surface can create branches and open PRs.
 - [ ] Required org SSO / 2FA / fine-grained token scopes are already satisfied.
+- [ ] Claude billing-pool requirements (`claude-subscription` vs `claude-api`) pass when Claude was selected.
 - [ ] No secrets will be pasted into the agent chat or brief file.
 
 ### Branch pushability
@@ -72,7 +93,7 @@ If `claude auth status` shows `loggedIn: false` on a headless box, use the **Hea
 Stop launch (do not start the session) if any of the following hold:
 
 1. Remote missing, wrong, or push denied.
-2. Auth expired, usage exhausted, insufficient scopes, or SSO not completed (alert the user first; see Auth and usage gate).
+2. Auth expired, usage exhausted, insufficient scopes, SSO not completed, or a selected billing pool's required environment is missing (alert the user first; see Auth and usage gate).
 3. Cannot create or push the planned branch.
 4. Only path available is editing the main checkout in place.
 5. Only available cloud path is a non-TTY bare CLI while prefs require a TTY.

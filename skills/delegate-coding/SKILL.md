@@ -77,7 +77,17 @@ Capture those files without spending credits:
 
 `--difficulty` is `hard`, `normal`, or `small`. Add `--frontier` only when this job is flagged and the user's frontier policy is `flagged`. Hard jobs re-read usage. Skip at >= 90% of any window, when blocked or spend-capped, when the context need exceeds 0.6 of the usable window, or when the plan bills extra and the user did not allow it.
 
-Use the JSON `launch` argv only when `action` is `launch`. `ask` or `stop` means ask the user. On a limit error, another error, or a stall past `stall_timeout_min`, hand off only within the same tier, and only automatically when `on_limit_or_stall` is `handoff`. Otherwise ask. Tell the user either way. Log the tool, resolved model, and usage snapshot.
+Use the JSON `launch` object only when `action` is `launch`. **The whole `launch` object is the runner contract, not only `launch.argv`.** Before spawning the child process:
+
+1. Start with the intended child-process environment.
+2. For every variable named in `launch.unset_env`, remove it from the child environment even if it is present in the orchestrator's environment.
+3. For every variable named in `launch.require_env`, require a non-empty value. If any is absent, **STOP and alert the user; do not launch and do not silently choose another billing path.**
+4. Never copy environment values into chat, briefs, routing output, or logs. Only presence/absence may be reported.
+5. Execute `launch.argv` with that sanitized/validated child environment and the requested stdin mode.
+
+For Claude specifically, `billing_pool: claude_subscription` must strip `ANTHROPIC_API_KEY` before spawn, while `billing_pool: claude_api` must require it. See `docs/agents/claude-billing-pools.md`. `ask` or `stop` means ask the user.
+
+On a limit error, another error, or a stall past `stall_timeout_min`, hand off only within the same tier, and only automatically when `on_limit_or_stall` is `handoff`. Otherwise ask. A fallback must still obey the same `plan: extra` / `extra_spend` consent gate as the original launch; never use fallback as a way around billing consent. Tell the user either way. Log the tool, resolved model, billing pool when present, and usage snapshot.
 
 Tests and CI pass `--fixtures tests/fixtures` and must not run a real CLI.
 
@@ -104,6 +114,7 @@ Tests and CI pass `--fixtures tests/fixtures` and must not run a real CLI.
 - If the surface's login has expired or it hit a usage limit, **STOP and alert the user** before falling back. Name the surface and what is needed (for example "Claude Code login expired; run the headless login" or "Cursor CLI usage exhausted, resets 2026-11-06").
 - Record the reset date when the tool shows one (see `coding-preflight`, step 3 of the auth gate).
 - Never fall back silently. After alerting, move to the next licensed peer in `preferences.order` only, and say which surface you moved to and why.
+- Never fall back into a tool configured as `plan: extra` unless the current job has the required `extra_spend` consent. This includes `claude` subscription exhaustion followed by `claude_api`.
 - Any fallback from a cloud surface to a local CLI must be announced to the user with the reason, even when prefs allow that local surface.
 
 ## Decision guidance (prefs-driven)
@@ -134,10 +145,10 @@ Tests and CI pass `--fixtures tests/fixtures` and must not run a real CLI.
 ## Launch sequence
 
 1. Ensure setup is complete (see Setup gate).
-2. Run **coding-preflight** when defaults require it — abort if remotes, auth, usage, or pushability fail, and alert the user on auth or usage failures.
+2. Run **coding-preflight** when defaults require it — abort if remotes, auth, usage, billing-pool requirements, or pushability fail, and alert the user on auth or usage failures.
 3. Write the brief with **build-handoff-brief** (file on disk, not chat paste).
 4. Push a durable `fix/…` (or equivalent) branch before any cloud teleport when local work exists.
-5. Launch the surface selected from user prefs, in its cloud form when the key is a cloud surface. The model comes from the opt-in tier catalog, not from a built-in vendor rank.
+5. Launch the surface selected from user prefs, in its cloud form when the key is a cloud surface. The model comes from the opt-in tier catalog, not from a built-in vendor rank. **Honor the full routing `launch` contract (`argv`, `stdin`, `unset_env`, and `require_env`); never spawn from `argv` alone.**
 6. Monitor only for idle, blocker, or PR; notify per the brief’s merge policy.
 7. Builder merges when CI is green; domain bot stays on product/MCP.
 
@@ -155,7 +166,7 @@ tmux new-session -d -s <name> -x 200 -y 50 "claude --remote-control <name>"
 
 - Folder-trust prompt: answer with `tmux send-keys -t <name> Down` then `tmux send-keys -t <name> Enter`, only for folders we created or own.
 - Send prompts: `tmux send-keys -t <name> -l '<prompt>'`, then a separate `tmux send-keys -t <name> Enter`.
-- Read output: `tmux capture-pane -p -J -t <name> -S -N` (N = lines of scrollback), filtering blank lines (for example `| grep -v '^\s*$'`).
+- Read output: `tmux capture-pane -p -J -t <name> -S -N` (N = lines of scrollback), filtering blank lines (for example, `| grep -v '^\s*$'`).
 - Frugal usage: drive the session through the terminal on the Mac (tmux over the machine shell), never through claude.ai/code in the agent's browser. Screenshots cost far more usage. Do not use `claude remote-control --session-id` / `--continue` or teleport from the agent box; those move the session off the Mac.
 - Never use plain `claude -p` on the Mac; always remote control.
 - If the Mac reports "OAuth access token has expired", alert the user to run `claude auth login` on the Mac (same stop-and-alert rule as **Login and usage limits**; no silent fallback).

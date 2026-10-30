@@ -32,6 +32,20 @@ def cache_is_fresh(cached_at: float, now: float, *, big: bool, ttl: int = USAGE_
     return (now - cached_at) < ttl
 
 
+def _adapter(tool_id: str):
+    # Both Claude pools use the same CLI/model parser. Billing/auth isolation is
+    # expressed in launch metadata below rather than by duplicating the adapter.
+    return ADAPTERS["claude"] if tool_id == "claude_api" else ADAPTERS[tool_id]
+
+
+def _billing_pool(tool_id: str) -> str | None:
+    if tool_id == "claude":
+        return "claude_subscription"
+    if tool_id == "claude_api":
+        return "claude_api"
+    return None
+
+
 def choose(
     job: dict[str, Any],
     settings: dict[str, Any],
@@ -62,7 +76,7 @@ def choose(
         report = reports.get(tool_id) or {}
         usage = report.get("usage")
         if not isinstance(usage, Usage):
-            usage = ADAPTERS[tool_id].parse_usage(report.get("usage_text") or "")
+            usage = _adapter(tool_id).parse_usage(report.get("usage_text") or "")
         job_model = job.get("model") if job.get("tool") == tool_id else None
         decision = _evaluate_tool(
             tool_id,
@@ -82,6 +96,8 @@ def choose(
             eligible.append(decision)
 
     forced = job.get("tool")
+    if forced == "claude_subscription":
+        forced = "claude"
     if forced:
         eligible = [row for row in eligible if row["tool"] == forced]
         if not eligible:
@@ -95,6 +111,7 @@ def choose(
     result = {
         "action": action,
         "tool": chosen["tool"] if chosen else None,
+        "billing_pool": _billing_pool(chosen["tool"]) if chosen else None,
         "model": chosen["model"] if chosen else None,
         "tier": tier,
         "family": chosen.get("family") if chosen else None,
@@ -111,8 +128,19 @@ def choose(
     }
     if chosen and action == "launch":
         prompt = str(job.get("prompt") or "")
-        command = ADAPTERS[chosen["tool"]].launch(chosen["model"], prompt)
-        result["launch"] = {"argv": list(command.argv), "stdin": command.stdin}
+        command = _adapter(chosen["tool"]).launch(chosen["model"], prompt)
+        launch = {"argv": list(command.argv), "stdin": command.stdin}
+        if chosen["tool"] == "claude":
+            # Claude Code gives ANTHROPIC_API_KEY precedence over subscription
+            # auth. Explicitly remove it so subscription work cannot bill API.
+            launch["unset_env"] = ["ANTHROPIC_API_KEY"]
+            launch["auth"] = "claude_subscription"
+        elif chosen["tool"] == "claude_api":
+            # Never embed a key in routing output/logs. The runner must already
+            # have the key in its environment and must fail closed if missing.
+            launch["require_env"] = ["ANTHROPIC_API_KEY"]
+            launch["auth"] = "anthropic_api_key"
+        result["launch"] = launch
     return result
 
 
@@ -159,25 +187,22 @@ def _evaluate_tool(
 
 def _resolve(tool_id: str, tier: str, catalog: dict[str, Any], models_payload: Any, pins: dict[str, str], job_model: Any):
     pin = str(job_model) if job_model and isinstance(job_model, str) else None
-    if tool_id == "claude":
-        family_pin = pin or _family_pin(catalog, tier, pins, "claude")
+    if tool_id in {"claude", "claude_api"}:
+        family_pin = pin or _family_pin(catalog, tier, pins, tool_id)
         return resolve_claude(catalog, tier, family_pin)
     if tool_id == "cursor":
         return resolve_cursor(catalog, pin or pins.get("cursor"))
     family_pin = None if pin is None else pin
-    # A job-level model pin replaces family resolution for this run.
     if family_pin:
         from model_routing.catalog import Resolution
-
         return Resolution(tool="codex", family=None, model=family_pin)
     return resolve_codex_tier(catalog, models_payload, tier, pins)
 
 
 def _family_pin(catalog: dict[str, Any], tier: str, pins: dict[str, str], tool_id: str) -> str | None:
-    if tool_id != "claude":
+    if tool_id not in {"claude", "claude_api"}:
         return None
     from model_routing.catalog import tier_families
-
     for family in tier_families(catalog, tier):
         if family in pins:
             return pins[family]
@@ -219,18 +244,14 @@ def _pick(eligible: list[dict[str, Any]], settings: dict[str, Any], difficulty: 
         ranked = 0 if user_rank is not None else 1
         user_index = user_rank if user_rank is not None else 0
         if difficulty == "hard":
-            # Most usage left. Unknown usage last. User order breaks ties.
             return (unknown, -(remaining or 0.0), ranked, user_index)
         if difficulty == "small":
-            # Cheapest: included before extra, then the user's cost order.
-            # Tools the user did not put in cost_order tie with each other.
             if row["tool"] in cost_order:
                 cost_rank, cost_known = cost_order.index(row["tool"]), 0
             else:
                 cost_rank, cost_known = 0, 1 if cost_order else 0
             extra = 1 if row["bills_extra"] else 0
             return (extra, unknown, cost_known, cost_rank, ranked, user_index)
-        # Normal: user order, then most usage left. Unknown usage last.
         return (unknown, ranked, user_index, -(remaining or 0.0))
 
     decorated = [(key(row), row) for row in eligible]
@@ -248,7 +269,9 @@ def _reviewer(chosen: dict[str, Any], eligible: list[dict[str, Any]], settings: 
         return None
     if mode == "same":
         return {"tool": chosen["tool"], "model": chosen["model"], "tier": tier}
+    chosen_vendor = "claude" if chosen["tool"] in {"claude", "claude_api"} else chosen["tool"]
     for row in eligible:
-        if row["tool"] != chosen["tool"]:
+        row_vendor = "claude" if row["tool"] in {"claude", "claude_api"} else row["tool"]
+        if row_vendor != chosen_vendor:
             return {"tool": row["tool"], "model": row["model"], "tier": tier}
     return None

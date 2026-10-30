@@ -26,10 +26,11 @@ def append_log(record: dict[str, Any], path: Path | None = None) -> Path:
 
 
 def _public_record(record: dict[str, Any]) -> dict[str, Any]:
-    """Keep tool, model, and usage. Drop anything that looks like an account id."""
+    """Keep routing facts, but never credentials or account identifiers."""
     usage = record.get("usage")
     return {
         "tool": record.get("tool"),
+        "billing_pool": record.get("billing_pool"),
         "model": record.get("model"),
         "tier": record.get("tier"),
         "action": record.get("action"),

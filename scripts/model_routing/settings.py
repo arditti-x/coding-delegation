@@ -56,13 +56,18 @@ LIMIT_VALUES = {
 }
 POLICY_VALUES = {"newest": "newest", "pin": "pin"}
 STALL_CHOICES = (15, 30, 60)
-TOOL_IDS = ("claude", "codex", "cursor")
+# `claude` remains the subscription-backed Claude Code pool for backwards
+# compatibility. `claude_api` is a distinct API-key-backed pool.
+TOOL_IDS = ("claude", "claude_api", "codex", "cursor")
 
 # Surface keys from the existing prefs shape, mapped only so a user's order
 # can name either the surface or the routing tool. Not a ranking.
 SURFACE_TO_TOOL = {
     "claude_code_cloud": "claude",
     "claude": "claude",
+    "claude_subscription": "claude",
+    "claude_api": "claude_api",
+    "claude_api_key": "claude_api",
     "codex_cloud": "codex",
     "codex": "codex",
     "cursor_cli": "cursor",
@@ -150,7 +155,8 @@ def normalize(settings: dict[str, Any]) -> dict[str, Any]:
         if not isinstance(tool, dict):
             tool = {}
         tool["enabled"] = bool(tool.get("enabled"))
-        plan = str(tool.get("plan") or "included").strip().lower()
+        default_plan = "extra" if tool_id == "claude_api" else "included"
+        plan = str(tool.get("plan") or default_plan).strip().lower()
         tool["plan"] = "extra" if plan in {"extra", "bills_extra", "bills extra"} else "included"
         tools[tool_id] = tool
     first = routing.get("first_tool")

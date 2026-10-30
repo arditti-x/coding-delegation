@@ -5,13 +5,15 @@
 #
 # Exit codes:
 #   0  every checked surface is ok (or has no status command and is "unknown, manual check")
-#   1  at least one surface needs attention (logged out, usage exhausted, or its
-#      status command failed / timed out / returned something unexpected)
+#   1  at least one surface needs attention (logged out, usage exhausted, missing env,
+#      or its status command failed / timed out / returned something unexpected)
 #   2  bad arguments
 #
 # Options:
 #   --strict          also exit 1 for "not installed" and "unknown, manual check"
-#   --only a,b        check only these surfaces (claude-code,cursor-cli,codex,agy,kiro,grok-build,cursor-cloud-agents)
+#   --only a,b        check only these surfaces. In addition to the normal surface
+#                     names, claude-subscription and claude-api are accepted for
+#                     explicit billing-pool preflight checks.
 #   --timeout SECS    per-command timeout (default 60; env AUTH_CHECK_TIMEOUT)
 #
 # Usage limits recorded by a session still come from a local file. Live remaining
@@ -27,6 +29,8 @@ STRICT=0
 ONLY=""
 TIMEOUT="${AUTH_CHECK_TIMEOUT:-60}"
 USAGE_FILE="${CODING_DELEGATION_USAGE_FILE:-$HOME/.config/coding-delegation/usage-limits}"
+# Keep claude-api out of the default sweep: users who did not enable the API
+# pool should not fail preflight merely because they do not have an API key.
 ALL_SURFACES="claude-code cursor-cli codex agy kiro grok-build cursor-cloud-agents"
 
 while [ $# -gt 0 ]; do
@@ -36,7 +40,7 @@ while [ $# -gt 0 ]; do
     --only=*) ONLY="${1#--only=}" ;;
     --timeout) shift; TIMEOUT="${1:-60}" ;;
     --timeout=*) TIMEOUT="${1#--timeout=}" ;;
-    -h|--help) sed -n '2,23p' "$0"; exit 0 ;;
+    -h|--help) sed -n '2,26p' "$0"; exit 0 ;;
     *) echo "unknown argument: $1" >&2; exit 2 ;;
   esac
   shift
@@ -77,12 +81,12 @@ usage_limit() { # prints "reset-date note" if an active limit is recorded for $1
 }
 
 # after a login check passes, downgrade to "usage exhausted" if a limit is recorded
-login_ok() { # surface detail
-  local reset
-  if reset="$(usage_limit "$1")"; then
-    line "$1" "usage exhausted" "resets $reset (from $USAGE_FILE)"
+login_ok() { # surface detail [usage-surface]
+  local surface="$1" detail="$2" usage_surface="${3:-$1}" reset
+  if reset="$(usage_limit "$usage_surface")"; then
+    line "$surface" "usage exhausted" "resets $reset (from $USAGE_FILE)"
   else
-    line "$1" "ok" "$2"
+    line "$surface" "ok" "$detail"
   fi
 }
 
@@ -91,14 +95,44 @@ failed() { # surface command
   else line "$1" "unknown" "\`$2\` exited $RC with unexpected output"; fi
 }
 
+check_claude_subscription() { # displayed-surface
+  local surface="$1" detail key_present=0
+  command -v claude >/dev/null || { line "$surface" "not installed" "binary claude not on PATH"; return; }
+  [ -n "${ANTHROPIC_API_KEY:-}" ] && key_present=1
+  # Verify the subscription/OAuth login with the API-key override removed.
+  # Otherwise a stray key could affect the very status check meant to validate
+  # the subscription path.
+  OUT="$( (unset ANTHROPIC_API_KEY; timeout "$TIMEOUT" claude auth status --json </dev/null) 2>&1 )"
+  RC=$?
+  if echo "$OUT" | grep -Eq '"loggedIn"[[:space:]]*:[[:space:]]*true'; then
+    detail="claude auth status: loggedIn true (checked with ANTHROPIC_API_KEY unset)"
+    if [ "$key_present" = 1 ]; then
+      detail="$detail; ANTHROPIC_API_KEY present in parent and must be stripped by launch contract"
+    fi
+    login_ok "$surface" "$detail" "claude-code"
+  elif echo "$OUT" | grep -Eq '"loggedIn"[[:space:]]*:[[:space:]]*false'; then
+    line "$surface" "logged out" "run the Claude login flow in docs/agents/claude-code.md"
+  else
+    failed "$surface" "claude auth status --json (API key unset)"
+  fi
+}
+
+check_claude_api() { # displayed-surface
+  local surface="$1"
+  command -v claude >/dev/null || { line "$surface" "not installed" "binary claude not on PATH"; return; }
+  if [ -n "${ANTHROPIC_API_KEY:-}" ]; then
+    line "$surface" "ok" "ANTHROPIC_API_KEY present (value not printed)"
+  else
+    line "$surface" "missing env" "ANTHROPIC_API_KEY is required for the Claude API pool"
+  fi
+}
+
 check() {
   case "$1" in
-    claude-code)
-      command -v claude >/dev/null || { line "$1" "not installed" "binary claude not on PATH"; return; }
-      run claude auth status --json
-      if echo "$OUT" | grep -Eq '"loggedIn"[[:space:]]*:[[:space:]]*true'; then login_ok "$1" "claude auth status: loggedIn true"
-      elif echo "$OUT" | grep -Eq '"loggedIn"[[:space:]]*:[[:space:]]*false'; then line "$1" "logged out" "run the Claude login flow in docs/agents/claude-code.md"
-      else failed "$1" "claude auth status --json"; fi ;;
+    claude-code|claude-subscription)
+      check_claude_subscription "$1" ;;
+    claude-api)
+      check_claude_api "$1" ;;
     cursor-cli)
       command -v agent >/dev/null || { line "$1" "not installed" "binary agent not on PATH"; return; }
       run agent status --format json
@@ -127,7 +161,7 @@ check() {
     cursor-cloud-agents)
       if reset="$(usage_limit "$1")"; then line "$1" "usage exhausted" "resets $reset (from $USAGE_FILE)"
       else line "$1" "unknown, manual" "no CLI; check cursor.com/agents (https://cursor.com/docs/cloud-agent, checked 2026-10-09)"; fi ;;
-    *) echo "unknown surface: $1 (known: $ALL_SURFACES)" >&2; exit 2 ;;
+    *) echo "unknown surface: $1 (known defaults: $ALL_SURFACES; also claude-subscription, claude-api)" >&2; exit 2 ;;
   esac
 }
 

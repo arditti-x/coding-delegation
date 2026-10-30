@@ -80,6 +80,10 @@ def _reports(args) -> dict:
     codex = CodexAdapter()
     return {
         "claude": {"usage": claude.parse_usage(_read(claude_path))},
+        # There is no non-billable API-credit-balance query in this router.
+        # Keep the pool explicit so production and tests have the same report
+        # shape, while leaving usage unknown rather than inventing a balance.
+        "claude_api": {"usage": unknown_usage("Anthropic API credit balance is not queried")},
         "codex": {
             "usage": codex.parse_usage(_read(rate_path)) if rate_path else unknown_usage(),
             "models": json.loads(_read(models_path)) if models_path and _read(models_path).strip() else {"models": []},
