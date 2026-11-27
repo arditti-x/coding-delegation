@@ -14,3 +14,14 @@ jobs:
           python-version: "3.12"
       - name: Model routing tests (fixtures only)
         run: python3 -m unittest discover -s tests -v
+
+  brief-guard:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Template carries the required headings
+        run: python3 skills/build-handoff-brief/check_brief.py --template skills/build-handoff-brief/SKILL.md
+      - name: Complete brief passes
+        run: python3 skills/build-handoff-brief/check_brief.py skills/build-handoff-brief/fixtures/complete.md
+      - name: Brief missing fields fails
+        run: "! python3 skills/build-handoff-brief/check_brief.py skills/build-handoff-brief/fixtures/missing-fields.md"

@@ -192,8 +192,9 @@ Dashboard → Marketplace → Coding Delegation → Enable
 2. When routing repo/PR work, invoke **delegate-coding** (it re-runs setup if
    needed, then the model-routing pre-job checks).
 3. Before launch, run **coding-preflight** (abort if remotes/auth fail). It starts with `bash scripts/auth-check.sh`, which prints one line per surface (ok, logged out, usage exhausted, not installed, unknown) and exits non-zero when any needs attention, so a scheduled routine can alert. A logged-out or out-of-usage surface is reported to the user before any fallback.
-4. Write the brief with **build-handoff-brief**; pass the file path to the
-   builder or chosen surface.
+4. Write the brief with **build-handoff-brief**; run
+   `python3 skills/build-handoff-brief/check_brief.py <brief.md>` and only send
+   it if the guard passes. Pass the file path to the builder or chosen surface.
 5. For builder questions and replies, use **agent-comms**; message with the brief
    path and one-line ask because saving the file alone does not wake the builder.
 6. Route per prefs only — never the main checkout; TTY for cloud CLIs when required. Use the matching file under `docs/agents/`.
@@ -206,7 +207,7 @@ Dashboard → Marketplace → Coding Delegation → Enable
 | `setup-coding-delegation` | First install, missing prefs, or “configure coding delegation” |
 | `delegate-coding` | Launch or route coding from an orchestrator / domain bot |
 | `coding-preflight` | Checklist before any prefs-selected surface launch |
-| `build-handoff-brief` | Required brief fields + template for handoff |
+| `build-handoff-brief` | Required brief fields + template + `check_brief.py` guard (Assumptions, Who runs it, Deliverables) |
 | `agent-comms` | Message a builder or another agent about a build, question, or reply |
 | `vendor-tools` | Use documented vendor commands and skills before launch |
 
@@ -247,7 +248,10 @@ coding-delegation/
     ├── setup-coding-delegation/SKILL.md
     ├── delegate-coding/SKILL.md
     ├── coding-preflight/SKILL.md
-    ├── build-handoff-brief/SKILL.md
+    ├── build-handoff-brief/
+    │   ├── SKILL.md
+    │   ├── check_brief.py
+    │   └── fixtures/
     ├── agent-comms/SKILL.md
     └── vendor-tools/SKILL.md
 ```
